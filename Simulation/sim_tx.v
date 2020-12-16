@@ -12,7 +12,7 @@
 `timescale 1ns / 1ps
 `include "Sources/uart.v"
 
-module testbench();
+module testbenchtx();
   reg clk, rst, data_size, parity_en, stop_bit_size, send;
   wire tx, ready, uartClock;
   reg [1:0] parity_mode;

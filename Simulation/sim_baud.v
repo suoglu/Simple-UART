@@ -12,7 +12,7 @@
 `timescale 1ns / 1ps
 `include "Sources/uart.v"
 
-module testbench();
+module testbenchclk();
   reg clk, rst, en;
   wire clk_slw;
 
