@@ -36,6 +36,11 @@ UART communication modules and two clock frequency generator modules are include
 * Supports 7 and 8 bit transactions
 * Supports even, odd, mark, space parities as well as no parity
 
+**`uart_dual`**
+
+* `uart_tx` and `uart_rx` bundled together, sharing same configurations
+* Can transmit and receive simultaneously
+
 **`baudRGen`**
 
 * Generates clock signel for UART transaction.
@@ -135,10 +140,10 @@ Transmitter ([sim_tx.v](Simulation/sim_tx.v)) and receiver ([sim_rx.v](Simulatio
 
 ## Test
 
-Not yet
+UART modules are tested on [Digilent Basys 3](https://reference.digilentinc.com/reference/programmable-logic/basys-3/reference-manual) with [test.v](Test/test.v). `Rx` and `Tx` signals connected to [Digilent Digital Discovery](https://reference.digilentinc.com/reference/instrumentation/digital-discovery/start) via JB pins. Received and send data connected to seven segment displays. For testing, UART Send & Receive mode of protocol analyzer is used. Modules only tested in 9600 and 115200 bit rates. Both 7 bit and 8 bit data sizes with all possible parity configurations tested.
 
 ## Status Information
 
 **Last simulation:** 16 December 2020, with [Vivado Simulator](https://www.xilinx.com/products/design-tools/vivado/simulator.html).
 
-**Last test:** -
+**Last test:** **Last test:** 16 December 2020, on [Digilent Basys 3](https://reference.digilentinc.com/reference/programmable-logic/basys-3/reference-manual).

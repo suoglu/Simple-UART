@@ -4,10 +4,37 @@
  * ------------------------------------------------ *
  * File        : uart.v                             *
  * Author      : Yigit Suoglu                       *
- * Last Edit   :                                    *
+ * Last Edit   : 16/12/2020                         *
  * ------------------------------------------------ *
  * Description : UART communication modules         *
  * ------------------------------------------------ */
+
+module uart_dual#(parameter inCLK_PERIOD_ns = 10)(
+  input clk,
+  input rst,
+  //Config signals
+  input baseClock_freq, //0: 76,8kHz (13us); 1: 460,8kHz (2,17us)
+  input [2:0] divRatio, 
+  input data_size, //0: 7bit; 1: 8bit
+  input parity_en,
+  input [1:0] parity_mode, //11: odd; 10: even, 01: mark(1), 00: space(0)
+  input stop_bit_size, //0: 1bit; 1: 2bit
+  //Data interface
+  input [7:0] data_i,
+  output [7:0] data_o,
+  output valid,
+  output newData,
+  output ready_tx,
+  output ready_rx,
+  input send,
+  //UART
+  output tx,
+  input rx);
+  
+  uart_rx RxUART(clk, rst, baseClock_freq, divRatio, data_size, parity_en, parity_mode, data_o, valid, ready_rx, new_data, rx,);
+
+  uart_tx TxUART(clk, rst, baseClock_freq, divRatio, data_size, parity_en, parity_mode, stop_bit_size, data_i, ready_tx, send, tx,);
+endmodule//uart_dual
 
 module uart_tx#(parameter inCLK_PERIOD_ns = 10)(
   input clk,
