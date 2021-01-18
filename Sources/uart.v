@@ -1,5 +1,5 @@
 /* ------------------------------------------------ *
- * Title       : Simple UART interface  v1.0        *
+ * Title       : Simple UART interface  v1.1        *
  * Project     : Simple UART                        *
  * ------------------------------------------------ *
  * File        : uart.v                             *
@@ -7,6 +7,11 @@
  * Last Edit   : 16/12/2020                         *
  * ------------------------------------------------ *
  * Description : UART communication modules         *
+ * ------------------------------------------------ *
+ * Revisions                                        *
+ *     v1      : Inital version                     *
+ *     v1.1    : Redeclerations of uartClock in     *
+ *               Tx and Rx modules removed          *
  * ------------------------------------------------ */
 
 module uart_dual#(parameter inCLK_PERIOD_ns = 10)(
@@ -58,7 +63,6 @@ module uart_tx#(parameter inCLK_PERIOD_ns = 10)(
               DATA = 3'b011,
             PARITY = 3'b110,
                END = 3'b100;
-  wire uartClock_0;
   reg [2:0] counter;
   reg [2:0] state;
   reg [7:0] data_buff;
@@ -250,7 +254,6 @@ module uart_rx#(parameter inCLK_PERIOD_ns = 10)(
               DATA = 3'b011,
             PARITY = 3'b110,
                END = 3'b100;
-  wire uartClock;
   reg [2:0] counter; 
   reg [2:0] state;
   reg [7:0] data_buff;
