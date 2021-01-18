@@ -38,7 +38,7 @@ module testbenchtx();
          $dumpvars(8, data);
          $dumpvars(9, tx);
          $dumpvars(10, uartClock);
-         #25000
+         #250000
          $finish;
        end
 
@@ -63,6 +63,7 @@ module testbenchtx();
             send <= 1;
             #20
             send <= 0;
-            //#43000
+            #30000
+            send <= 1;
         end
 endmodule
