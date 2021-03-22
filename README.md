@@ -92,30 +92,30 @@ Rates of transmitted bits is controlled with `uartClock`. `uartClock` kept high 
 
 *`baseClock_freq` = 0; 13 µs (76.92 kHz)*
 
-| `divRatio` | Output Frequency | Output Period |
-| :-----: | :-----: | :-----: |
-| 0 | 76.92 kHz | 13 µs |
-| 1 | 38.46 kHz | 26 µs |
-| 2 | 19.23 kHz | 52 µs |
-| 3 | 9.61 kHz | 104 µs |
-| 4 | 4.81 kHz | 208 µs |
-| 5 | 2.4 kHz | 416 µs |
-| 6 | 1.2 kHz | 832 µs |
-| 7 | 600.1 Hz | 1.664 ms |
+| `divRatio` | Output Frequency | Output Period | Corresponding Common Baud Rate |
+| :-----: | :-----: | :-----: | :-----: |
+| 0 | 76.92 kHz | 13 µs | 76.8k |
+| 1 | 38.46 kHz | 26 µs | 38.4k |
+| 2 | 19.23 kHz | 52 µs | 19.2k |
+| 3 | 9.61 kHz | 104 µs | 9.6k |
+| 4 | 4.81 kHz | 208 µs | 4.8k |
+| 5 | 2.4 kHz | 416 µs | 2.4k |
+| 6 | 1.2 kHz | 832 µs | 1.2k |
+| 7 | 600.1 Hz | 1.664 ms | 600 |
 
 ---
 
 *`baseClock_freq` = 1; 2.16 µs (462.96 kHz):*
-| `divRatio` | Output Frequency | Output Period |
-| :-----: | :-----: | :-----: |
-| 0 | 462.96 kHz | 2.16 µs |
-| 1 | 231.48 kHz | 4.32 µs |
-| 2 | 115.74 kHz | 8.64 µs |
-| 3 | 57.87 kHz | 17.28 µs |
-| 4 | 28.94 kHz | 34.56 µs |
-| 5 | 14.47 kHz | 69.12 µs |
-| 6 | 7.23 kHz | 138.24 µs |
-| 7 | 3.62 kHz | 276.48 µs |
+| `divRatio` | Output Frequency | Output Period | Corresponding Common Baud Rate |
+| :-----: | :-----: | :-----: | :-----: |
+| 0 | 462.96 kHz | 2.16 µs | 460.8k |
+| 1 | 231.48 kHz | 4.32 µs | 230.4k |
+| 2 | 115.74 kHz | 8.64 µs | 115.2k |
+| 3 | 57.87 kHz | 17.28 µs | 57.6k |
+| 4 | 28.94 kHz | 34.56 µs | 28.8k |
+| 5 | 14.47 kHz | 69.12 µs | 14.4k |
+| 6 | 7.23 kHz | 138.24 µs | 7.2k |
+| 7 | 3.62 kHz | 276.48 µs | ? |
 
 ---
 
