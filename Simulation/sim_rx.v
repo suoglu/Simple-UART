@@ -10,7 +10,7 @@
  * ------------------------------------------------ */
 
 `timescale 1ns / 1ps
-`include "Sources/uart.v"
+// `include "Sources/uart.v"
 
 module testbenchrx();
   reg clk, rst, data_size, parity_en;
@@ -29,25 +29,25 @@ module testbenchrx();
   //parity_mode: 11: odd; 10: even, 01: mark(1), 00: space(0)
   uart_rx uut(clk, rst, 1'b1, 3'd0, data_size, parity_en, parity_mode, data, valid, ready, new_data, rx, uartClock);
 
-     initial //Tracked signals & Total sim time
-       begin
-         $dumpfile("Simulation/rx.vcd");
-         $dumpvars(0, clk);
-         $dumpvars(1, rst);
-         $dumpvars(2, ready);
-         $dumpvars(3, new_data);
-         $dumpvars(4, data_size);
-         $dumpvars(5, parity_en);
-         $dumpvars(6, parity_mode);
-         $dumpvars(7, valid);
-         $dumpvars(8, data);
-         $dumpvars(9, rx);
-         $dumpvars(10, uartClock);
-         $dumpvars(11, send_data);
-         $dumpvars(12, parity);
-         #26000
-         $finish;
-       end
+    //  initial //Tracked signals & Total sim time
+    //    begin
+    //      $dumpfile("Simulation/rx.vcd");
+    //      $dumpvars(0, clk);
+    //      $dumpvars(1, rst);
+    //      $dumpvars(2, ready);
+    //      $dumpvars(3, new_data);
+    //      $dumpvars(4, data_size);
+    //      $dumpvars(5, parity_en);
+    //      $dumpvars(6, parity_mode);
+    //      $dumpvars(7, valid);
+    //      $dumpvars(8, data);
+    //      $dumpvars(9, rx);
+    //      $dumpvars(10, uartClock);
+    //      $dumpvars(11, send_data);
+    //      $dumpvars(12, parity);
+    //      #26000
+    //      $finish;
+    //    end
 
     initial //initilizations and reset
         begin
