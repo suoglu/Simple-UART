@@ -4,12 +4,13 @@
 
 1. About
 2. Universal Asynchronous Receiver-Rransmitter (Brief information)
-3. IOs of Modules
-4. Bit rates
-5. Modules
-6. Simulation
-7. Test
-8. Status Information
+3. Modules
+4. IOs of Modules
+5. Bit rates
+6. Utilization
+7. Simulation
+8. Test
+9. Status Information
 
 [![Repo on GitLab](https://img.shields.io/badge/repo-GitLab-6C488A.svg)](https://gitlab.com/suoglu/uart)
 [![Repo on GitHub](https://img.shields.io/badge/repo-GitHub-3D76C2.svg)](https://github.com/suoglu/Simple-UART)
@@ -143,7 +144,6 @@ I: Input O: Output
 | `divRatio` | I | 3 | Divison ratio for UART clock |
 
 I: Input O: Output
-I: Input O: Output
 
 `CLOCK_PERIOD` parameter should be set to clock period in ns for correct UART clock generation. Default value is 10 ns, corresponds to 100 MHz.
 
@@ -157,6 +157,8 @@ I: Input O: Output
 | `clk_uart_` | O | 1 | UART Clock |
 | `divRatio` | I | 3 | Divison ratio for UART clock |
 
+I: Input O: Output
+
 ### `uart_clk_en` Ports
 
 |   Port   | Type | Width |  Description |
@@ -166,6 +168,8 @@ I: Input O: Output
 | `ext_uart_clk` | I | 1 | External Clock Input |
 | `en` | I | 1 | Enable clock generator |
 | `clk_uart_` | O | 1 | UART Clock |
+
+I: Input O: Output
 
 ## Bit rates
 
@@ -217,17 +221,45 @@ Rates of transmitted bits is controlled with `clk_uart`. `clk_uart` kept high wh
 | 2 | 6.25 MHz | 160 ns |
 | 3 | 3.125 MHz | 320 ns |
 
+## Utilization
+
+**(Synthesized) Utilization of `uart_tx` on Artix-7:**
+
+* Slice LUTs: 20 (as Logic)
+* Slice Registers: 19 (as Flip Flop)
+
+**(Synthesized) Utilization of `uart_rx` on Artix-7:**
+
+* Slice LUTs: 12 (as Logic)
+* Slice Registers: 28 (as Flip Flop)
+
+**(Synthesized) Utilization of `uart_transceiver` on Artix-7:**
+
+* Slice LUTs: 32 (as Logic)
+* Slice Registers: 47 (as Flip Flop)
+
+**(Synthesized) Utilization of `uart_clk_gen` on Artix-7:**
+
+* Slice LUTs: 24 (as Logic)
+* Slice Registers: 18 (as Flip Flop)
+
+**(Synthesized) Utilization of `uart_clk_gen_hs` on Artix-7:**
+
+* Slice LUTs: 7 (as Logic)
+* Slice Registers: 5 (as Flip Flop)
+
+**(Synthesized) Utilization of `uart_clk_en` on Artix-7:**
+
+* Slice LUTs: 1 (as Logic)
+* Slice Registers: 1 (as Flip Flop)
+
 ## Simulation
 
 Transmitter ([sim_tx.v](Simulation/sim_tx.v)) and receiver ([sim_rx.v](Simulation/sim_rx.v)) modules are simulated individually, as well as clock generators ([sim_baud.v](Simulation/sim_baud.v)) in corresponding files.
 
 ## Test
 
-### Test on 16 December 2020
-
-Modules in [test.v](Test/test.v) should be updated!
-
-UART modules are tested on [Digilent Basys 3](https://reference.digilentinc.com/reference/programmable-logic/basys-3/reference-manual) with [test.v](Test/test.v). `Rx` and `Tx` signals connected to [Digilent Digital Discovery](https://reference.digilentinc.com/reference/instrumentation/digital-discovery/start) via JB pins. Received and send data connected to seven segment displays. For testing, UART Send & Receive mode of protocol analyzer is used. Modules only tested in 9600 and 115200 bit rates. Both 7 bit and 8 bit data sizes with all possible parity configurations tested.
+UART modules are tested on [Digilent Basys 3](https://reference.digilentinc.com/reference/programmable-logic/basys-3/reference-manual) with [test.v](Test/test.v). [design_uart_bd.tcl](Test/design_uart_bd.tcl) can be use to generate test block design automatically. `Rx` and `Tx` signals connected to [Digilent Digital Discovery](https://reference.digilentinc.com/reference/instrumentation/digital-discovery/start) via JB pins. Received and send data connected to seven segment displays. For testing, UART Send & Receive mode of protocol analyzer is used. Modules only tested in 9600 and 115200 bit rates. Both 7 bit and 8 bit data sizes with all possible parity configurations tested.
 
 ## Status Information
 
