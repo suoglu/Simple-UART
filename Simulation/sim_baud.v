@@ -4,7 +4,7 @@
  * ------------------------------------------------ *
  * File        : sim_baud.v                         *
  * Author      : Yigit Suoglu                       *
- * Last Edit   : 14.12.2020                         *
+ * Last Edit   : 23/05/2021                         *
  * ------------------------------------------------ *
  * Description : Simulation for Clock generator     *
  * ------------------------------------------------ */
@@ -18,7 +18,7 @@ module testbenchclk();
 
   always #5 clk <= ~clk;
 
-  baudRGen_HS uut(clk, rst, 2'd3, en, clk_slw);
+  uart_clk_gen_hs uut(clk, rst, en, clk_slw, 2'd3);
 
      initial //Tracked signals & Total sim time
        begin

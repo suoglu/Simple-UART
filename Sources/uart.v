@@ -1,25 +1,33 @@
 /* ------------------------------------------------ *
- * Title       : Simple UART interface  v1.1        *
+ * Title       : UART interface  v1.2               *
  * Project     : Simple UART                        *
  * ------------------------------------------------ *
  * File        : uart.v                             *
  * Author      : Yigit Suoglu                       *
- * Last Edit   : 18/01/2021                         *
+ * Last Edit   : 23/05/2021                         *
  * ------------------------------------------------ *
  * Description : UART communication modules         *
  * ------------------------------------------------ *
  * Revisions                                        *
  *     v1      : Inital version                     *
- *     v1.1    : Redeclerations of uartClock in     *
+ *     v1.1    : Redeclerations of clk_uart in     *
  *               Tx and Rx modules removed          *
+ *     v1.2    : Move UART generation into outside  *
+ *               of UART modules                    *
  * ------------------------------------------------ */
 
-module uart_dual#(parameter inCLK_PERIOD_ns = 10)(
+module uart_transceiver(
   input clk,
   input rst,
-  //Config signals
-  input baseClock_freq, //0: 76,8kHz (13us); 1: 460,8kHz (2,17us)
-  input [2:0] divRatio, 
+  //UART
+  output tx,
+  input rx,
+  //Uart clock connection
+  input clk_uart_tx,
+  input clk_uart_rx,
+  output uart_enable_tx,
+  output uart_enable_rx,
+  //Config signals 
   input data_size, //0: 7bit; 1: 8bit
   input parity_en,
   input [1:0] parity_mode, //11: odd; 10: even, 01: mark(1), 00: space(0)
@@ -28,25 +36,25 @@ module uart_dual#(parameter inCLK_PERIOD_ns = 10)(
   input [7:0] data_i,
   output [7:0] data_o,
   output valid,
-  output newData,
+  output new_data,
   output ready_tx,
   output ready_rx,
-  input send,
-  //UART
-  output tx,
-  input rx);
+  input send);
   
-  uart_rx RxUART(clk, rst, baseClock_freq, divRatio, data_size, parity_en, parity_mode, data_o, valid, ready_rx, new_data, rx,);
+  uart_rx RxUART(clk, rst, rx, clk_uart_rx, uart_enable_rx, data_size, parity_en, parity_mode, data_o, valid, ready_rx, new_data);
 
-  uart_tx TxUART(clk, rst, baseClock_freq, divRatio, data_size, parity_en, parity_mode, stop_bit_size, data_i, ready_tx, send, tx,);
+  uart_tx TxUART(clk, rst, tx, clk_uart_tx, uart_enable_tx, data_size, parity_en, parity_mode, stop_bit_size, data_i, ready_tx, send);
 endmodule//uart_dual
 
-module uart_tx#(parameter inCLK_PERIOD_ns = 10)(
+module uart_tx(
   input clk,
   input rst,
+  //UART transmit
+  output reg tx,
+  //Uart clock connection
+  input clk_uart,
+  output uart_enable,
   //Config signals
-  input baseClock_freq, //0: 76,8kHz (13us); 1: 460,8kHz (2,17us)
-  input [2:0] divRatio, 
   input data_size, //0: 7bit; 1: 8bit
   input parity_en,
   input [1:0] parity_mode, //11: odd; 10: even, 01: mark(1), 00: space(0)
@@ -54,10 +62,7 @@ module uart_tx#(parameter inCLK_PERIOD_ns = 10)(
   //Data interface
   input [7:0] data,
   output ready,
-  input send,
-  //UART transmit
-  output reg tx,
-  output uartClock);
+  input send);
   localparam READY = 3'b000,
              START = 3'b001,
               DATA = 3'b011,
@@ -78,13 +83,9 @@ module uart_tx#(parameter inCLK_PERIOD_ns = 10)(
   assign in_End = (state == END);
   assign ready = in_Ready;
 
-  //delay in_End
-  always@(posedge clk)
-    begin
-      in_End_d <= in_End;
-    end
 
   assign countDONE = (in_End & (counter[0] == stop_bit_size)) | (in_Data & (counter == {2'b11, data_size}));
+  assign uart_enable = en & (~in_End_d | in_End);
 
   //Internal enable signal
   always@(posedge clk)
@@ -109,7 +110,7 @@ module uart_tx#(parameter inCLK_PERIOD_ns = 10)(
     end
   
   //State transactions
-  always@(negedge uartClock or posedge rst)
+  always@(negedge clk_uart or posedge rst)
     begin
       if(rst)
         begin
@@ -146,8 +147,11 @@ module uart_tx#(parameter inCLK_PERIOD_ns = 10)(
         end
     end
   
+  //delay in_End
+  always@(posedge clk) in_End_d <= in_End;
+
   //Counter
-  always@(negedge uartClock or posedge rst)
+  always@(negedge clk_uart or posedge rst)
     begin
       if(rst)
         begin
@@ -174,7 +178,7 @@ module uart_tx#(parameter inCLK_PERIOD_ns = 10)(
     end
   
   //handle data_buff
-  always@(negedge uartClock)
+  always@(negedge clk_uart)
     begin
       case(state)
         START:
@@ -217,7 +221,7 @@ module uart_tx#(parameter inCLK_PERIOD_ns = 10)(
     end
   
   //Parity calc
-  always@(posedge uartClock)
+  always@(posedge clk_uart)
     begin
       if(in_Start) //reset
         begin
@@ -228,16 +232,17 @@ module uart_tx#(parameter inCLK_PERIOD_ns = 10)(
           parity_calc <= (in_Data) ? (parity_calc ^ (tx & parity_mode[1])) : parity_calc;
         end
     end
-  
-  baudRGen #(inCLK_PERIOD_ns) clk_gen(clk, rst, baseClock_freq,  divRatio, (en & (~in_End_d | in_End)), uartClock);
 endmodule//uart_tx
 
-module uart_rx#(parameter inCLK_PERIOD_ns = 10)(
+module uart_rx(
   input clk,
   input rst,
+  //UART receive
+  input rx,
+  //Uart clock connection
+  input clk_uart,
+  output uart_enable,
   //Config signals
-  input baseClock_freq, //0: 76,8kHz (13us); 1: 460,8kHz (2,17us)
-  input [2:0] divRatio,
   input data_size, //0: 7bit; 1: 8bit
   input parity_en,
   input [1:0] parity_mode, //11: odd; 10: even, 01: mark(1), 00: space(0)
@@ -245,10 +250,7 @@ module uart_rx#(parameter inCLK_PERIOD_ns = 10)(
   output reg [7:0] data,
   output reg valid,
   output ready,
-  output newData,
-  //UART receive
-  input rx,
-  output uartClock);
+  output newData);
   localparam READY = 3'b000,
              START = 3'b001,
               DATA = 3'b011,
@@ -259,6 +261,7 @@ module uart_rx#(parameter inCLK_PERIOD_ns = 10)(
   reg [7:0] data_buff;
   wire in_Ready, in_Start, in_Data, in_Parity, in_End;
   reg parity_calc, in_End_d, en;
+
   //Decode states
   assign in_Ready = (state == READY);
   assign in_Start = (state == START);
@@ -269,6 +272,7 @@ module uart_rx#(parameter inCLK_PERIOD_ns = 10)(
 
   assign newData = ~in_End & in_End_d; //New data add negedge of in_End
   assign countDONE = in_Data & (counter == {2'b11, data_size});
+  assign uart_enable = en & (~in_End_d | in_End);
 
   //internal enable
   always@(posedge clk or posedge rst)
@@ -293,9 +297,8 @@ module uart_rx#(parameter inCLK_PERIOD_ns = 10)(
         end
     end
   
-
   //Counter
-  always@(negedge uartClock or posedge rst)
+  always@(negedge clk_uart or posedge rst)
     begin
       if(rst)
         begin
@@ -317,7 +320,7 @@ module uart_rx#(parameter inCLK_PERIOD_ns = 10)(
     end
   
   //State transactions
-  always@(negedge uartClock or posedge rst)
+  always@(negedge clk_uart or posedge rst)
     begin
       if(rst)
         begin
@@ -355,10 +358,7 @@ module uart_rx#(parameter inCLK_PERIOD_ns = 10)(
     end
 
   //delay in_End
-  always@(posedge clk)
-    begin
-      in_End_d <= in_End;
-    end
+  always@(posedge clk) in_End_d <= in_End;
 
   //Store received data
   always@(posedge clk)
@@ -368,7 +368,7 @@ module uart_rx#(parameter inCLK_PERIOD_ns = 10)(
     end
   
   //Handle data_buff
-  always@(posedge uartClock)
+  always@(posedge clk_uart)
     begin
       case(state)
         START:
@@ -405,7 +405,7 @@ module uart_rx#(parameter inCLK_PERIOD_ns = 10)(
     end
   
   //Parity calc
-  always@(posedge uartClock)
+  always@(posedge clk_uart)
     begin
       if(in_Start) //reset
         begin
@@ -416,226 +416,4 @@ module uart_rx#(parameter inCLK_PERIOD_ns = 10)(
           parity_calc <= (in_Data) ? (parity_calc ^ (rx & parity_mode[1])) : parity_calc;
         end
     end
-  
-  baudRGen #(inCLK_PERIOD_ns) clk_gen(clk, rst, baseClock_freq,  divRatio, (en & (~in_End_d | in_End)), uartClock);
 endmodule//uart_tx
-
-//Generate a clock freqency for various baudrates, just clock divider 
-module baudRGen#(parameter inCLK_PERIOD_ns = 10)(
-  input clk,
-  input rst,
-  input baseClock_freq, //0: 76,8kHz (13us) 1: 460,8kHz (2,17us)
-  input [2:0] divRatio, //Higher the value lower the freq
-  input en,
-  output uartClock);
-
-  localparam sec6_5u = (6500 / inCLK_PERIOD_ns) - 1;
-  localparam sec1_08u = (1080 / inCLK_PERIOD_ns) - 1;
-  localparam counterWIDTH = $clog2(sec6_5u);
-  localparam CLKRST = 1'b0;
-  localparam CLKDEF = 1'b1;
-
-  wire en_rst;
-
-  reg baseClock;
-  wire countDONE;
-
-  reg [(counterWIDTH-1):0] counter;
-  wire [(counterWIDTH-1):0] countTO;
-
-  wire [7:0] clockArray;
-  reg [6:0] divClock;
-
-  assign en_rst = en | rst;
-
-  assign countTO = (baseClock_freq) ? sec1_08u : sec6_5u;
-  assign countDONE = (countTO == counter);
-
-  assign clockArray = {divClock, baseClock};
-  assign uartClock = (en) ? clockArray[divRatio] : CLKDEF;
-
-  //Counter
-  always@(posedge clk)
-    begin
-      if(~en)
-        counter <= 0;
-      else
-        counter <= (countDONE) ? 0 : (counter +  1);
-    end
-  
-  //Generate base clock with counter
-  always@(posedge clk)
-    begin
-      if(~en)
-        baseClock <= CLKRST;
-      else
-        baseClock <= (countDONE) ? ~baseClock : baseClock;
-    end
-  
-  //Clock dividers
-  // 1/2
-  always@(posedge baseClock or negedge en_rst)
-    begin
-      if(~en_rst)
-        begin
-          divClock[0] <= CLKRST;
-        end
-      else
-        begin
-          divClock[0] <= ~divClock[0];
-        end
-    end
-  // 1/4
-  always@(posedge divClock[0] or negedge en_rst)
-    begin
-      if(~en_rst)
-        begin
-          divClock[1] <= CLKRST;
-        end
-      else
-        begin
-          divClock[1] <= ~divClock[1];
-        end
-    end
-  // 1/8
-  always@(posedge divClock[1] or negedge en_rst)
-    begin
-      if(~en_rst)
-        begin
-          divClock[2] <= CLKRST;
-        end
-      else
-        begin
-          divClock[2] <= ~divClock[2];
-        end
-    end
-  // 1/16
-  always@(posedge divClock[2] or negedge en_rst)
-    begin
-      if(~en_rst)
-        begin
-          divClock[3] <= CLKRST;
-        end
-      else
-        begin
-          divClock[3] <= ~divClock[3];
-        end
-    end
-  // 1/32
-  always@(posedge divClock[3] or negedge en_rst)
-    begin
-      if(~en_rst)
-        begin
-          divClock[4] <= CLKRST;
-        end
-      else
-        begin
-          divClock[4] <= ~divClock[4];
-        end
-    end
-  // 1/64
-  always@(posedge divClock[4] or negedge en_rst)
-    begin
-      if(~en_rst)
-        begin
-          divClock[5] <= CLKRST;
-        end
-      else
-        begin
-          divClock[5] <= ~divClock[5];
-        end
-    end
-  // 1/128
-  always@(posedge divClock[5] or negedge en_rst)
-    begin
-      if(~en_rst)
-        begin
-          divClock[6] <= CLKRST;
-        end
-      else
-        begin
-          divClock[6] <= ~divClock[6];
-        end
-    end
-endmodule
-
-//Generate a clock freqency for non standard higher frequencies
-module baudRGen_HS(
-  input clk,
-  input rst,
-  input [1:0] divRatio, //Higher the value lower the freq
-  input en,
-  output uartClock);
-
-  localparam CLKRST = 1'b0;
-  localparam CLKDEF = 1'b1;
-
-  wire en_rst;
-
-  reg baseClock;
-
-  reg [3:0] divClock;
-
-  assign en_rst = en | rst;
-
-  assign uartClock = (en) ? divClock[divRatio] : CLKDEF;
-
-  //Generate base clock with counter
-  always@(posedge clk)
-    begin
-      if(~en)
-        baseClock <= CLKRST;
-      else
-        baseClock <= ~baseClock;
-    end
-
-  //Clock dividers
-  // 1/2
-  always@(posedge baseClock or negedge en_rst)
-    begin
-      if(~en_rst)
-        begin
-          divClock[0] <= CLKRST;
-        end
-      else
-        begin
-          divClock[0] <= ~divClock[0];
-        end
-    end
-  // 1/4
-  always@(posedge divClock[0] or negedge en_rst)
-    begin
-      if(~en_rst)
-        begin
-          divClock[1] <= CLKRST;
-        end
-      else
-        begin
-          divClock[1] <= ~divClock[1];
-        end
-    end
-  // 1/8
-  always@(posedge divClock[1] or negedge en_rst)
-    begin
-      if(~en_rst)
-        begin
-          divClock[2] <= CLKRST;
-        end
-      else
-        begin
-          divClock[2] <= ~divClock[2];
-        end
-    end
-  // 1/16
-  always@(posedge divClock[2] or negedge en_rst)
-    begin
-      if(~en_rst)
-        begin
-          divClock[3] <= CLKRST;
-        end
-      else
-        begin
-          divClock[3] <= ~divClock[3];
-        end
-    end
-endmodule

@@ -3,10 +3,10 @@
 ## Contents of Readme
 
 1. About
-2. Modules
+2. Universal Asynchronous Receiver-Rransmitter (Brief information)
 3. IOs of Modules
 4. Bit rates
-5. Universal Asynchronous Receiver-Rransmitter (Brief information)
+5. Modules
 6. Simulation
 7. Test
 8. Status Information
@@ -20,9 +20,15 @@
 
 Set of simple modules to communicate via UART.
 
+## Universal Asynchronous Receiver-Transmitter
+
+From [Wikipedia](https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter): A universal asynchronous receiver-transmitter (UART) is a computer hardware device for asynchronous serial communication in which the data format and transmission speeds are configurable. It sends data bits one by one, from the least significant to the most significant, framed by start and stop bits so that precise timing is handled by the communication channel.
+
 ## Modules
 
-UART communication modules and two clock frequency generator modules are included in [uart.v](Sources/uart.v).
+UART communication modules are included in [uart.v](Sources/uart.v). UART clock generation modules are included in [uart_clock.v](Sources/uart_clock.v).
+
+Data always send LSB first.
 
 **`uart_tx`**
 
@@ -36,57 +42,138 @@ UART communication modules and two clock frequency generator modules are include
 * Supports 7 and 8 bit transactions
 * Supports even, odd, mark, space parities as well as no parity
 
-**`uart_dual`**
+**`uart_transceiver`**
 
 * `uart_tx` and `uart_rx` bundled together, sharing same configurations
 * Can transmit and receive simultaneously
 
-**`baudRGen`**
+**`uart_clk_gen`**
 
 * Generates clock signel for UART transaction.
 * Genarated frequencies corresponds to some of the common bit rates.
 * Works with various clock frequencies, controlled by input parameter.
 
-**`baudRGen_HS`**
+**`uart_clk_gen_hs`**
 
 * Generates higher frequency clock signel for UART transaction.
 * Genarated frequencies depends on input clock frequency, and does not corresponds to the common bit rates.
+
+**`uart_clk_en`**
+
+* Generates clock signal from an external clock input.
 
 **Important:** Transactions configurations should be kept constant during transaction. Changing data during transaction does not effect the data currently being transmitted.
 
 ## IOs of Modules
 
-|   Port   | Module | Type | Width |  Description |
-| :------: | :----: | :----: | :----: |  ------    |
-|  `clk`   | T/R/C  |   I   | 1 | System Clock |
-|  `rst`   | T/R/C  |   I   | 1 | System Reset |
-| `baseClock_freq` | T/R/C | I | 1 | Configure base clock; 76,8kHz (13us) or 460,8kHz (2,17us) |
-| `divRatio` | T/R/C  | I | 3 | Divison ratio for UART clock |
-| `data_size` | T/R | I | 1 | Configure Data size; 7 or 8 bit |
-| `parity_en` | T/R | I | 1 | Enable parity |
-| `parity_mode` | T/R | I | 2 | Configure parity value |
-| `stop_bit_size` | T | I | 1 | Configure Stop bit length; 1 or 2 bit |
-| `data` | T/R | I/O | 8 | Transmisson data |
-| `ready` | T/R | O | 1 | Modules are ready new operation |
-| `send` | T | I | 1 | Start transaction |
-| `tx` | T | O | 1 | Transmit line |
-| `rx` | R | I | 1 | Receive line |
-| `uartClock` | T/R/C | O | 1 | UART clock, can be used for debug or sync |
-| `valid` | R | O | 1 | Parity check result, only when enabled (`parity_en`) |
-| `newData` | R | O | 1 | One cycle high pulse to show new data is available |
-| `en` | C| I | 1 | Enable clock generator |
+### `uart_transceiver` Ports
 
-T: Transmitter  R: Receiver C: Clock generators I: Input  O: Output
+|   Port   | Type | Width |  Description |
+| :------: | :----: | :----: |  ------    |
+|  `clk`   |   I   | 1 | System Clock |
+|  `rst`   |   I   | 1 | System Reset |
+| `tx` | O | 1 | Transmit line |
+| `rx` | I | 1 | Receive line |
+| `clk_uart_tx` | I | 1 | UART Transmitter Clock |
+| `clk_uart_rx` | I | 1 | UART Receiver Clock |
+| `uart_enable_tx` | O | 1 | Enable UART Transmitter Clock |
+| `uart_enable_rx` | O | 1 | Enable UART Receiver Clock |
+| `data_size` |I | 1 | Configure Data size; 7 or 8 bit |
+| `parity_en` | I | 1 | Enable parity |
+| `parity_mode` | I | 2 | Configure parity value |
+| `stop_bit_size` | I | 1 | Configure Stop bit length; 1 or 2 bit |
+| `data_i` | I | 8 | Transmit data |
+| `data_o` | O | 8 | Receive data |
+| `valid` | O | 1 | Parity check result, only when enabled (`parity_en`) |
+| `newData` | O | 1 | One cycle high pulse to show new data is available |
+| `ready_tx` | O | 1 | Transmitter is ready |
+| `ready_rx` | I | 1 | Receiver is ready |
+| `send` | I | 1 | Start transaction |
 
-`inCLK_PERIOD_ns` parameter should be set to clock period in ns for correct UART clock generation. Default value is 10 ns, corresponds to 100 MHz.
+I: Input O: Output
+
+### `uart_tx` Ports
+
+|   Port   | Type | Width |  Description |
+| :------: | :----: | :----: |  ------    |
+|  `clk`   |   I   | 1 | System Clock |
+|  `rst`   |   I   | 1 | System Reset |
+| `tx` | O | 1 | Transmit line |
+| `clk_uart` | I | 1 | UART Transmitter Clock |
+| `uart_enable` | O | 1 | Enable UART Transmitter Clock |
+| `data_size` |I | 1 | Configure Data size; 7 or 8 bit |
+| `parity_en` | I | 1 | Enable parity |
+| `parity_mode` | I | 2 | Configure parity value |
+| `stop_bit_size` | I | 1 | Configure Stop bit length; 1 or 2 bit |
+| `data` | I | 8 | Transmit data |
+| `ready` | O | 1 | Transmitter is ready |
+| `send` | I | 1 | Start transaction |
+
+I: Input O: Output
+
+### `uart_rx` Ports
+
+|   Port   | Type | Width |  Description |
+| :------: | :----: | :----: |  ------    |
+|  `clk`   |   I   | 1 | System Clock |
+|  `rst`   |   I   | 1 | System Reset |
+| `rx` | I | 1 | Receive line |
+| `clk_uart_` | I | 1 | UART Receiver Clock |
+| `uart_enable` | O | 1 | Enable UART Receiver Clock |
+| `data_size` |I | 1 | Configure Data size; 7 or 8 bit |
+| `parity_en` | I | 1 | Enable parity |
+| `parity_mode` | I | 2 | Configure parity value |
+| `stop_bit_size` | I | 1 | Configure Stop bit length; 1 or 2 bit |
+| `data` | O | 8 | Receive data |
+| `valid` | O | 1 | Parity check result, only when enabled (`parity_en`) |
+| `ready` | I | 1 | Receiver is ready
+| `newData` | O | 1 | One cycle high pulse to show new data is available |
+
+I: Input O: Output
+
+### `uart_clk_gen` Ports
+
+|   Port   | Type | Width |  Description |
+| :------: | :----: | :----: |  ------    |
+|  `clk`   |   I   | 1 | System Clock |
+|  `rst`   |   I   | 1 | System Reset |
+| `en` | I | 1 | Enable clock generator |
+| `clk_uart_` | O | 1 | UART Clock |
+| `baseClock_freq` | I | 1 | Configure base clock; 76,8kHz (13us) or 460,8kHz (2,17us) |
+| `divRatio` | I | 3 | Divison ratio for UART clock |
+
+I: Input O: Output
+I: Input O: Output
+
+`CLOCK_PERIOD` parameter should be set to clock period in ns for correct UART clock generation. Default value is 10 ns, corresponds to 100 MHz.
+
+### `uart_clk_gen_hs` Ports
+
+|   Port   | Type | Width |  Description |
+| :------: | :----: | :----: |  ------    |
+|  `clk`   |   I   | 1 | System Clock |
+|  `rst`   |   I   | 1 | System Reset |
+| `en` | I | 1 | Enable clock generator |
+| `clk_uart_` | O | 1 | UART Clock |
+| `divRatio` | I | 3 | Divison ratio for UART clock |
+
+### `uart_clk_en` Ports
+
+|   Port   | Type | Width |  Description |
+| :------: | :----: | :----: |  ------    |
+|  `clk`   |   I   | 1 | System Clock |
+|  `rst`   |   I   | 1 | System Reset |
+| `ext_uart_clk` | I | 1 | External Clock Input |
+| `en` | I | 1 | Enable clock generator |
+| `clk_uart_` | O | 1 | UART Clock |
 
 ## Bit rates
 
-Rates of transmitted bits is controlled with `uartClock`. `uartClock` kept high when IDLE. Data is read at positive edges and shifted at negative edges. UART modules works with `baudRGen` by default, but `baudRGen_HS` can also be used if requested.
+Rates of transmitted bits is controlled with `clk_uart`. `clk_uart` kept high when IDLE. Data is read at positive edges and shifted at negative edges. UART modules take `clk_uart` as input. Signal `uart_enable` is used to enable `clk_uart`. Included `uart_clk_gen` and `uart_clk_gen_hs` modules can be used to generate `clk_uart`. Module `uart_clk_en` can be used with an external clock signal to generate `clk_uart`.
 
-**`baudRGen`:**
+### `uart_clk_gen` bit rates
 
-`baudRGen` generates `uartClock` by dividing a base clock. Freqency of base clock controlled by `baseClock_freq`.
+`uart_clk_gen` generates `clk_uart` by dividing a base clock. Freqency of base clock controlled by `baseClock_freq`.
 
 ---
 
@@ -119,9 +206,9 @@ Rates of transmitted bits is controlled with `uartClock`. `uartClock` kept high 
 
 ---
 
-**`baudRGen_HS`:**
+### `uart_clk_gen_hs`  bit rates
 
-`baudRGen_HS` generates `uartClock` by dividing system clock. Following table provides output frequencies for 100 MHz system clock.
+`uart_clk_gen_hs` generates `clk_uart` by dividing system clock. Following table provides output frequencies for 100 MHz system clock.
 
 | `divRatio` | Output Frequency | Output Period |
 | :-----: | :-----: | :-----: |
@@ -130,20 +217,20 @@ Rates of transmitted bits is controlled with `uartClock`. `uartClock` kept high 
 | 2 | 6.25 MHz | 160 ns |
 | 3 | 3.125 MHz | 320 ns |
 
-## Universal Asynchronous Receiver-Transmitter
-
-From [Wikipedia](https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter): A universal asynchronous receiver-transmitter (UART) is a computer hardware device for asynchronous serial communication in which the data format and transmission speeds are configurable. It sends data bits one by one, from the least significant to the most significant, framed by start and stop bits so that precise timing is handled by the communication channel.
-
 ## Simulation
 
 Transmitter ([sim_tx.v](Simulation/sim_tx.v)) and receiver ([sim_rx.v](Simulation/sim_rx.v)) modules are simulated individually, as well as clock generators ([sim_baud.v](Simulation/sim_baud.v)) in corresponding files.
 
 ## Test
 
+### Test on 16 December 2020
+
+Modules in [test.v](Test/test.v) should be updated!
+
 UART modules are tested on [Digilent Basys 3](https://reference.digilentinc.com/reference/programmable-logic/basys-3/reference-manual) with [test.v](Test/test.v). `Rx` and `Tx` signals connected to [Digilent Digital Discovery](https://reference.digilentinc.com/reference/instrumentation/digital-discovery/start) via JB pins. Received and send data connected to seven segment displays. For testing, UART Send & Receive mode of protocol analyzer is used. Modules only tested in 9600 and 115200 bit rates. Both 7 bit and 8 bit data sizes with all possible parity configurations tested.
 
 ## Status Information
 
-**Last simulation:** 16 December 2020, with [Vivado Simulator](https://www.xilinx.com/products/design-tools/vivado/simulator.html).
+**Last simulation:** 23 May 2021, with [Vivado Simulator](https://www.xilinx.com/products/design-tools/vivado/simulator.html).
 
-**Last test:** **Last test:** 16 December 2020, on [Digilent Basys 3](https://reference.digilentinc.com/reference/programmable-logic/basys-3/reference-manual).
+**Last test:** 16 December 2020, on [Digilent Basys 3](https://reference.digilentinc.com/reference/programmable-logic/basys-3/reference-manual).

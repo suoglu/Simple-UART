@@ -4,7 +4,7 @@
  * ------------------------------------------------ *
  * File        : sim_rx.v                           *
  * Author      : Yigit Suoglu                       *
- * Last Edit   : 16.12.2020                         *
+ * Last Edit   : 23/05/2021                         *
  * ------------------------------------------------ *
  * Description : Simulation for Receiver module     *
  * ------------------------------------------------ */
@@ -14,7 +14,7 @@
 
 module testbenchrx();
   reg clk, rst, data_size, parity_en;
-  wire ready, uartClock, valid, new_data;
+  wire ready, uartClock, valid, new_data,uartEn;
   reg rx;
   reg [1:0] parity_mode;
   wire [7:0] data;
@@ -27,27 +27,29 @@ module testbenchrx();
 
    //0: 76,8kHz (13us); 1: 460,8kHz (2,17us)
   //parity_mode: 11: odd; 10: even, 01: mark(1), 00: space(0)
-  uart_rx uut(clk, rst, 1'b1, 3'd0, data_size, parity_en, parity_mode, data, valid, ready, new_data, rx, uartClock);
+  uart_rx uut(clk, rst, rx, uartClock, uartEn, data_size, parity_en, parity_mode, data, valid, ready, new_data);
 
-    //  initial //Tracked signals & Total sim time
-    //    begin
-    //      $dumpfile("Simulation/rx.vcd");
-    //      $dumpvars(0, clk);
-    //      $dumpvars(1, rst);
-    //      $dumpvars(2, ready);
-    //      $dumpvars(3, new_data);
-    //      $dumpvars(4, data_size);
-    //      $dumpvars(5, parity_en);
-    //      $dumpvars(6, parity_mode);
-    //      $dumpvars(7, valid);
-    //      $dumpvars(8, data);
-    //      $dumpvars(9, rx);
-    //      $dumpvars(10, uartClock);
-    //      $dumpvars(11, send_data);
-    //      $dumpvars(12, parity);
-    //      #26000
-    //      $finish;
-    //    end
+  baudRGen clkGenUART(clk,rst,1'b1, 3'd0,uartEn,uartClock);
+
+/*      initial //Tracked signals & Total sim time
+       begin
+         $dumpfile("Simulation/rx.vcd");
+         $dumpvars(0, clk);
+         $dumpvars(1, rst);
+         $dumpvars(2, ready);
+         $dumpvars(3, new_data);
+         $dumpvars(4, data_size);
+         $dumpvars(5, parity_en);
+         $dumpvars(6, parity_mode);
+         $dumpvars(7, valid);
+         $dumpvars(8, data);
+         $dumpvars(9, rx);
+         $dumpvars(10, uartClock);
+         $dumpvars(11, send_data);
+         $dumpvars(12, parity);
+         #26000
+         $finish;
+       end */
 
     initial //initilizations and reset
         begin
@@ -60,7 +62,7 @@ module testbenchrx();
         end
     initial //test cases
         begin
-            rx = 0;
+            rx = 1;
             data_size = 1;
             parity_en = 1;
             parity_mode  = 2'd1;
