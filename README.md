@@ -3,14 +3,15 @@
 ## Contents of Readme
 
 1. About
-2. Universal Asynchronous Receiver-Rransmitter (Brief information)
-3. Modules
-4. IOs of Modules
-5. Bit rates
-6. Utilization
-7. Simulation
-8. Test
-9. Status Information
+2. Universal Asynchronous Receiver-Transmitter (Brief information)
+3. Standalone
+   1. Modules
+   2. IOs of Modules
+   3. Bit rates
+   4. Utilization
+   5. Simulation
+   6. Test
+4. Status Information
 
 [![Repo on GitLab](https://img.shields.io/badge/repo-GitLab-6C488A.svg)](https://gitlab.com/suoglu/uart)
 [![Repo on GitHub](https://img.shields.io/badge/repo-GitHub-3D76C2.svg)](https://github.com/suoglu/Simple-UART)
@@ -25,7 +26,7 @@ Set of simple modules to communicate via UART.
 
 From [Wikipedia](https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter): A universal asynchronous receiver-transmitter (UART) is a computer hardware device for asynchronous serial communication in which the data format and transmission speeds are configurable. It sends data bits one by one, from the least significant to the most significant, framed by start and stop bits so that precise timing is handled by the communication channel.
 
-## Modules
+## Standalone Modules
 
 UART communication modules are included in [uart.v](Sources/uart.v). UART clock generation modules are included in [uart_clock.v](Sources/uart_clock.v).
 
@@ -50,14 +51,14 @@ Data always send LSB first.
 
 **`uart_clk_gen`**
 
-* Generates clock signel for UART transaction.
-* Genarated frequencies corresponds to some of the common bit rates.
+* Generates clock signal for UART transaction.
+* Generated frequencies corresponds to some of the common bit rates.
 * Works with various clock frequencies, controlled by input parameter.
 
 **`uart_clk_gen_hs`**
 
-* Generates higher frequency clock signel for UART transaction.
-* Genarated frequencies depends on input clock frequency, and does not corresponds to the common bit rates.
+* Generates higher frequency clock signal for UART transaction.
+* Generated frequencies depends on input clock frequency, and does not corresponds to the common bit rates.
 
 **`uart_clk_en`**
 
@@ -65,7 +66,7 @@ Data always send LSB first.
 
 **Important:** Transactions configurations should be kept constant during transaction. Changing data during transaction does not effect the data currently being transmitted.
 
-## IOs of Modules
+## IOs of Standalone Modules
 
 ### `uart_transceiver` Ports
 
@@ -141,7 +142,7 @@ I: Input O: Output
 | `en` | I | 1 | Enable clock generator |
 | `clk_uart_` | O | 1 | UART Clock |
 | `baseClock_freq` | I | 1 | Configure base clock; 76,8kHz (13us) or 460,8kHz (2,17us) |
-| `divRatio` | I | 3 | Divison ratio for UART clock |
+| `divRatio` | I | 3 | Division ratio for UART clock |
 
 I: Input O: Output
 
@@ -155,7 +156,7 @@ I: Input O: Output
 |  `rst`   |   I   | 1 | System Reset |
 | `en` | I | 1 | Enable clock generator |
 | `clk_uart_` | O | 1 | UART Clock |
-| `divRatio` | I | 3 | Divison ratio for UART clock |
+| `divRatio` | I | 3 | Division ratio for UART clock |
 
 I: Input O: Output
 
@@ -177,7 +178,7 @@ Rates of transmitted bits is controlled with `clk_uart`. `clk_uart` kept high wh
 
 ### `uart_clk_gen` bit rates
 
-`uart_clk_gen` generates `clk_uart` by dividing a base clock. Freqency of base clock controlled by `baseClock_freq`.
+`uart_clk_gen` generates `clk_uart` by dividing a base clock. Frequency of base clock controlled by `baseClock_freq`.
 
 ---
 
@@ -221,7 +222,7 @@ Rates of transmitted bits is controlled with `clk_uart`. `clk_uart` kept high wh
 | 2 | 6.25 MHz | 160 ns |
 | 3 | 3.125 MHz | 320 ns |
 
-## Utilization
+## Standalone Utilization
 
 **(Synthesized) Utilization of `uart_tx` on Artix-7:**
 
@@ -253,15 +254,17 @@ Rates of transmitted bits is controlled with `clk_uart`. `clk_uart` kept high wh
 * Slice LUTs: 1 (as Logic)
 * Slice Registers: 1 (as Flip Flop)
 
-## Simulation
+## Standalone Simulation
 
 Transmitter ([sim_tx.v](Simulation/sim_tx.v)) and receiver ([sim_rx.v](Simulation/sim_rx.v)) modules are simulated individually, as well as clock generators ([sim_baud.v](Simulation/sim_baud.v)) in corresponding files.
 
-## Test
+## Standalone Test
 
-UART modules are tested on [Digilent Basys 3](https://reference.digilentinc.com/reference/programmable-logic/basys-3/reference-manual) with [test.v](Test/test.v). [design_uart_bd.tcl](Test/design_uart_bd.tcl) can be use to generate test block design automatically. `Rx` and `Tx` signals connected to [Digilent Digital Discovery](https://reference.digilentinc.com/reference/instrumentation/digital-discovery/start) via JB pins. Received and send data connected to seven segment displays. For testing, UART Send & Receive mode of protocol analyzer is used. Modules only tested in 9600 and 115200 bit rates. Both 7 bit and 8 bit data sizes with all possible parity configurations tested.
+UART modules are tested on [Digilent Basys 3](https://reference.digilentinc.com/reference/programmable-logic/basys-3/reference-manual) with [test.v](Test/standalone/test.v). [design_uart_bd.tcl](Test/design_uart_bd.tcl) can be use to generate test block design automatically. `Rx` and `Tx` signals connected to [Digilent Digital Discovery](https://reference.digilentinc.com/reference/instrumentation/digital-discovery/start) via JB pins. Received and send data connected to seven segment displays. For testing, UART Send & Receive mode of protocol analyzer is used. Modules only tested in 9600 and 115200 bit rates. Both 7 bit and 8 bit data sizes with all possible parity configurations tested.
 
 ## Status Information
+
+### Standalone
 
 **Last simulation:** 23 May 2021, with [Vivado Simulator](https://www.xilinx.com/products/design-tools/vivado/simulator.html).
 
