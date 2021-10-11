@@ -1,19 +1,20 @@
 /* ------------------------------------------------ *
- * Title       : UART interface  v1.2               *
+ * Title       : UART interface  v1.3               *
  * Project     : Simple UART                        *
  * ------------------------------------------------ *
  * File        : uart.v                             *
  * Author      : Yigit Suoglu                       *
- * Last Edit   : 23/05/2021                         *
+ * Last Edit   : 11/10/2021                         *
  * ------------------------------------------------ *
  * Description : UART communication modules         *
  * ------------------------------------------------ *
  * Revisions                                        *
  *     v1      : Inital version                     *
- *     v1.1    : Redeclerations of clk_uart in     *
+ *     v1.1    : Redeclerations of clk_uart in      *
  *               Tx and Rx modules removed          *
  *     v1.2    : Move UART generation into outside  *
  *               of UART modules                    *
+ *     v1.3    : More compact coding style          *
  * ------------------------------------------------ */
 
 module uart_transceiver(
@@ -88,150 +89,70 @@ module uart_tx(
   assign uart_enable = en & (~in_End_d | in_End);
 
   //Internal enable signal
-  always@(posedge clk)
-    begin
-      if(rst)
-        begin
-          en <= 1'd0;
-        end
-      else
-        begin
-          case(en)
-            1'b0:
-              begin
-                en <= send;
-              end
-            1'b1:
-              begin
-                en <= ~in_End_d | in_End; //only high on negative edge
-              end
-          endcase
-        end
-    end
+  always@(posedge clk) begin
+    if(rst) begin
+      en <= 1'd0;
+    end else case(en)
+      1'b0: en <= send;
+      1'b1: en <= ~in_End_d | in_End; //only high on negative edge
+    endcase
+  end
   
   //State transactions
-  always@(negedge clk_uart or posedge rst)
-    begin
-      if(rst)
-        begin
-          state <= READY;
-        end
-      else
-        begin
-          case(state)
-            READY:
-              begin
-                state <= (en) ? START : state;
-              end
-            START:
-              begin
-                state <= DATA;
-              end
-            DATA:
-              begin
-                state <= (countDONE) ? ((parity_en) ? PARITY : END) : state;
-              end
-            PARITY:
-              begin
-                state <= END;
-              end
-            END:
-              begin
-                state <= (countDONE) ? READY : state;
-              end
-            default:
-              begin
-                state <= READY;
-              end
-          endcase
-        end
-    end
+  always@(negedge clk_uart or posedge rst) begin
+    if(rst) begin
+      state <= READY;
+    end else case(state)
+      READY: state <= (en) ? START : state;
+      START: state <= DATA;
+      DATA: state <= (countDONE) ? ((parity_en) ? PARITY : END) : state;
+      PARITY: state <= END;
+      END: state <= (countDONE) ? READY : state;
+      default: state <= READY;
+    endcase
+  end
   
   //delay in_End
   always@(posedge clk) in_End_d <= in_End;
 
   //Counter
-  always@(negedge clk_uart or posedge rst)
-    begin
-      if(rst)
-        begin
-          counter <= 3'd0;
-        end
-      else
-        begin
-          case(state)
-            DATA:
-              begin
-                counter <= (countDONE) ? 3'd0 : (counter + 3'd1);
-              end
-            END:
-              begin
-                counter <= (countDONE) ? 3'd0 : (counter + 3'd1);
-              end
-            default:
-              begin
-                counter <= 3'd0;
-              end
-          endcase
-          
-        end
-    end
+  always@(negedge clk_uart or posedge rst) begin
+    if(rst) begin
+      counter <= 3'd0;
+    end else case(state)
+      DATA: counter <= (countDONE) ? 3'd0 : (counter + 3'd1);
+      END: counter <= (countDONE) ? 3'd0 : (counter + 3'd1);
+      default: counter <= 3'd0;
+    endcase
+  end
   
   //handle data_buff
-  always@(negedge clk_uart)
-    begin
-      case(state)
-        START:
-          begin
-            data_buff <= data;
-          end
-        DATA:
-          begin
-            data_buff <= (data_buff >> 1);
-          end
-        default:
-          begin
-            data_buff <= data_buff;
-          end
-      endcase
-    end
+  always@(negedge clk_uart) begin
+    case(state)
+      START: data_buff <= data;
+      DATA: data_buff <= (data_buff >> 1);
+      default: data_buff <= data_buff;
+    endcase
+  end
   
   //tx routing
-  always@*
-    begin
-      case(state)
-        START:
-          begin
-            tx = 1'b0;
-          end
-        DATA:
-          begin
-            tx = data_buff[0];
-          end
-        PARITY:
-          begin
-            tx = parity_calc;
-          end
-        default:
-          begin
-            tx = 1'b1;
-          end
-      endcase
-      
-    end
+  always@* begin
+    case(state)
+      START: tx = 1'b0;
+      DATA: tx = data_buff[0];
+      PARITY: tx = parity_calc;
+      default: tx = 1'b1;
+    endcase
+  end
   
   //Parity calc
-  always@(posedge clk_uart)
-    begin
-      if(in_Start) //reset
-        begin
-          parity_calc <= parity_mode[0];
-        end
-      else
-        begin
-          parity_calc <= (in_Data) ? (parity_calc ^ (tx & parity_mode[1])) : parity_calc;
-        end
+  always@(posedge clk_uart) begin
+    if(in_Start) begin //reset
+      parity_calc <= parity_mode[0];
+    end else begin
+      parity_calc <= (in_Data) ? (parity_calc ^ (tx & parity_mode[1])) : parity_calc;
     end
+  end
 endmodule//uart_tx
 
 module uart_rx(
@@ -275,145 +196,72 @@ module uart_rx(
   assign uart_enable = en & (~in_End_d | in_End);
 
   //internal enable
-  always@(posedge clk or posedge rst)
-    begin
-      if(rst)
-        begin
-          en <= 1'b0;
-        end
-      else
-        begin
-          case(en)
-            1'b0:
-              begin
-                en <= (rx) ? en : 1'b1;
-              end
-            1'b1:
-              begin
-                en <= ~in_End_d | in_End;
-              end
-          endcase
-          
-        end
-    end
+  always@(posedge clk or posedge rst) begin
+    if(rst) begin
+      en <= 1'b0;
+    end else case(en)
+      1'b0: en <= (rx) ? en : 1'b1;
+      1'b1: en <= ~in_End_d | in_End;
+    endcase
+  end
   
   //Counter
-  always@(negedge clk_uart or posedge rst)
-    begin
-      if(rst)
-        begin
-          counter <= 3'd0;
-        end
-      else
-        begin
-          case(state)
-            DATA:
-              begin
-                counter <= (countDONE) ? 3'd0 : (counter + 3'd1);
-              end
-            default:
-              begin
-                counter <= 3'd0;
-              end
-          endcase
-        end
-    end
+  always@(negedge clk_uart or posedge rst) begin
+    if(rst) begin
+      counter <= 3'd0;
+    end else case(state)
+      DATA: counter <= (countDONE) ? 3'd0 : (counter + 3'd1);
+      default: counter <= 3'd0;
+    endcase
+  end
   
   //State transactions
-  always@(negedge clk_uart or posedge rst)
-    begin
-      if(rst)
-        begin
-          state <= READY;
-        end
-      else
-        begin
-          case(state)
-            READY:
-              begin
-                state <= (en) ? START : state;
-              end
-            START:
-              begin
-                state <= DATA;
-              end
-            DATA:
-              begin
-                state <= (countDONE) ? ((parity_en) ? PARITY : END) : state;
-              end
-            PARITY:
-              begin
-                state <= END;
-              end
-            END:
-              begin
-                state <= READY;
-              end
-            default:
-              begin
-                state <= READY;
-              end
-          endcase
-        end
-    end
+  always@(negedge clk_uart or posedge rst) begin
+    if(rst) begin
+      state <= READY;
+    end else case(state)
+      READY: state <= (en) ? START : state;
+      START: state <= DATA;
+      DATA: state <= (countDONE) ? ((parity_en) ? PARITY : END) : state;
+      PARITY: state <= END;
+      END: state <= READY;
+      default: state <= READY;
+    endcase
+  end
 
   //delay in_End
   always@(posedge clk) in_End_d <= in_End;
 
   //Store received data
-  always@(posedge clk)
-    begin
-      if(in_End)
-        data <= data_buff;
-    end
+  always@(posedge clk) begin
+    data <= (~in_End_d & in_End) ? data_buff : data;
+  end
   
   //Handle data_buff
-  always@(posedge clk_uart)
-    begin
-      case(state)
-        START:
-          begin //clear buffer
-            data_buff <= 8'd0;
-          end
-        DATA:
-          begin //Shift in new data from MS
-            data_buff <= {rx, data_buff[7:1]};
-          end
-        END:
-          begin //Shift one more 7bit data mode
-            data_buff <= (data_size) ? data_buff : (data_buff >> 1);
-          end
-        default:
-          begin
-            data_buff <= data_buff;
-          end
-      endcase
-      
-    end
+  always@(posedge clk_uart) begin
+    case(state)
+      START: data_buff <= 8'd0;
+      DATA: data_buff <= {rx, data_buff[7:1]};
+      END: data_buff <= (data_size) ? data_buff : (data_buff >> 1);
+      default: data_buff <= data_buff;
+    endcase
+  end
   
   //Parity check
-  always@(posedge clk)
-    begin
-      if(rst)
-        begin
-          valid <= 1'b0;
-        end
-      else
-        begin
-          valid <= (in_Parity) ? (rx == parity_calc) : valid;
-        end
+  always@(posedge clk) begin
+    if(rst) begin
+      valid <= 1'b0;
+    end else begin
+      valid <= (in_Parity) ? (rx == parity_calc) : valid;
     end
+  end
   
   //Parity calc
-  always@(posedge clk_uart)
-    begin
-      if(in_Start) //reset
-        begin
-          parity_calc <= parity_mode[0];
-        end
-      else
-        begin
-          parity_calc <= (in_Data) ? (parity_calc ^ (rx & parity_mode[1])) : parity_calc;
-        end
+  always@(posedge clk_uart) begin
+    if(in_Start) begin //reset
+      parity_calc <= parity_mode[0];
+    end else begin
+      parity_calc <= (in_Data) ? (parity_calc ^ (rx & parity_mode[1])) : parity_calc;
     end
+  end
 endmodule//uart_tx
