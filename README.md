@@ -86,7 +86,8 @@ Data always send LSB first.
 | `stop_bit_size` | I | 1 | Configure Stop bit length; 1 or 2 bit |
 | `data_i` | I | 8 | Transmit data |
 | `data_o` | O | 8 | Receive data |
-| `valid` | O | 1 | Parity check result, only when enabled (`parity_en`) |
+| `error_parity` | O | 1 | Parity check result, only when enabled (`parity_en`) |
+| `error_frame` | O | 1 | Frame Error |
 | `newData` | O | 1 | One cycle high pulse to show new data is available |
 | `ready_tx` | O | 1 | Transmitter is ready |
 | `ready_rx` | I | 1 | Receiver is ready |
@@ -127,8 +128,9 @@ I: Input O: Output
 | `parity_mode` | I | 2 | Configure parity value |
 | `stop_bit_size` | I | 1 | Configure Stop bit length; 1 or 2 bit |
 | `data` | O | 8 | Receive data |
-| `valid` | O | 1 | Parity check result, only when enabled (`parity_en`) |
-| `ready` | I | 1 | Receiver is ready
+| `error_parity` | O | 1 | Parity check result, only when enabled (`parity_en`) |
+| `error_frame` | O | 1 | Frame Error |
+| `ready` | I | 1 | Receiver is ready |
 | `newData` | O | 1 | One cycle high pulse to show new data is available |
 
 I: Input O: Output
@@ -231,13 +233,13 @@ Rates of transmitted bits is controlled with `clk_uart`. `clk_uart` kept high wh
 
 **(Synthesized) Utilization of `uart_rx` on Artix-7:**
 
-* Slice LUTs: 12 (as Logic)
-* Slice Registers: 28 (as Flip Flop)
+* Slice LUTs: 17 (as Logic)
+* Slice Registers: 29 (as Flip Flop)
 
 **(Synthesized) Utilization of `uart_transceiver` on Artix-7:**
 
-* Slice LUTs: 32 (as Logic)
-* Slice Registers: 47 (as Flip Flop)
+* Slice LUTs: 37 (as Logic)
+* Slice Registers: 48 (as Flip Flop)
 
 **(Synthesized) Utilization of `uart_clk_gen` on Artix-7:**
 
@@ -266,6 +268,6 @@ UART modules are tested on [Digilent Basys 3](https://reference.digilentinc.com/
 
 ### Standalone
 
-**Last simulation:** 23 May 2021, with [Vivado Simulator](https://www.xilinx.com/products/design-tools/vivado/simulator.html).
+**Last simulation:** 10 October 2021, with [Vivado Simulator](https://www.xilinx.com/products/design-tools/vivado/simulator.html).
 
 **Last test:** 16 December 2020, on [Digilent Basys 3](https://reference.digilentinc.com/reference/programmable-logic/basys-3/reference-manual).

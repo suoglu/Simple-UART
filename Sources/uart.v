@@ -1,10 +1,10 @@
 /* ------------------------------------------------ *
- * Title       : UART interface  v1.3               *
+ * Title       : UART interface  v1.4               *
  * Project     : Simple UART                        *
  * ------------------------------------------------ *
  * File        : uart.v                             *
  * Author      : Yigit Suoglu                       *
- * Last Edit   : 11/10/2021                         *
+ * Last Edit   : 12/10/2021                         *
  * ------------------------------------------------ *
  * Description : UART communication modules         *
  * ------------------------------------------------ *
@@ -15,6 +15,7 @@
  *     v1.2    : Move UART generation into outside  *
  *               of UART modules                    *
  *     v1.3    : More compact coding style          *
+ *     v1.4    : Detect Frame error                 *
  * ------------------------------------------------ */
 
 module uart_transceiver(
@@ -37,35 +38,38 @@ module uart_transceiver(
   input [7:0] data_i,
   output [7:0] data_o,
   output error_parity,
+  output error_frame,
   output new_data,
   output ready_tx,
   output ready_rx,
   input send);
-  
-  uart_rx RxUART(.clk(clk), 
-                 .rst(rst),  
-                 .rx(rx),  
-                 .clk_uart(clk_uart_rx),  
-                 .uart_enable(uart_enable_rx),  
-                 .data_size(data_size),  
-                 .parity_en(parity_en),  
-                 .parity_mode(parity_mode),  
-                 .data(data_o),  
-                 .error_parity(error_parity),  
-                 .ready(ready_rx),  
+
+  uart_rx RxUART(.clk(clk),
+                 .rst(rst),
+                 .rx(rx),
+                 .clk_uart(clk_uart_rx),
+                 .uart_enable(uart_enable_rx),
+                 .data_size(data_size),
+                 .parity_en(parity_en),
+                 .parity_mode(parity_mode),
+                 .stop_bit_size(stop_bit_size),
+                 .data(data_o),
+                 .error_parity(error_parity),
+                 .error_frame(error_frame),
+                 .ready(ready_rx),
                  .newData(new_data));
 
-  uart_tx TxUART(.clk(clk),  
-                 .rst(rst),  
-                 .tx(tx),  
-                 .clk_uart(clk_uart_tx),  
-                 .uart_enable(uart_enable_tx),  
-                 .data_size(data_size),  
-                 .parity_en(parity_en),  
-                 .parity_mode(parity_mode),  
-                 .stop_bit_size(stop_bit_size),  
-                 .data(data_i),  
-                 .ready(ready_tx),  
+  uart_tx TxUART(.clk(clk),
+                 .rst(rst),
+                 .tx(tx),
+                 .clk_uart(clk_uart_tx),
+                 .uart_enable(uart_enable_tx),
+                 .data_size(data_size),
+                 .parity_en(parity_en),
+                 .parity_mode(parity_mode),
+                 .stop_bit_size(stop_bit_size),
+                 .data(data_i),
+                 .ready(ready_tx),
                  .send(send));
 endmodule//uart_dual
 
@@ -94,20 +98,18 @@ module uart_tx(
   reg [2:0] counter;
   reg [2:0] state;
   reg [7:0] data_buff;
-  wire in_Ready, in_Start, in_Data, in_Parity, in_End;
   reg en, parity_calc, in_End_d;
-  wire countDONE;
-  
+
   //Decode states
-  assign in_Ready = (state == READY);
-  assign in_Start = (state == START);
-  assign in_Data = (state == DATA);
-  assign in_Parity = (state == PARITY);
-  assign in_End = (state == END);
+  wire in_Ready = (state == READY);
+  wire in_Start = (state == START);
+  wire in_Data = (state == DATA);
+  wire in_Parity = (state == PARITY);
+  wire in_End = (state == END);
   assign ready = in_Ready;
 
 
-  assign countDONE = (in_End & (counter[0] == stop_bit_size)) | (in_Data & (counter == {2'b11, data_size}));
+  wire countDONE = (in_End & (counter[0] == stop_bit_size)) | (in_Data & (counter == {2'b11, data_size}));
   assign uart_enable = en & (~in_End_d | in_End);
 
   //Internal enable signal
@@ -119,7 +121,7 @@ module uart_tx(
       1'b1: en <= ~in_End_d | in_End; //only high on negative edge
     endcase
   end
-  
+
   //State transactions
   always@(negedge clk_uart or posedge rst) begin
     if(rst) begin
@@ -133,7 +135,7 @@ module uart_tx(
       default: state <= READY;
     endcase
   end
-  
+
   //delay in_End
   always@(posedge clk) in_End_d <= in_End;
 
@@ -147,7 +149,7 @@ module uart_tx(
       default: counter <= 3'd0;
     endcase
   end
-  
+
   //handle data_buff
   always@(negedge clk_uart) begin
     case(state)
@@ -156,7 +158,7 @@ module uart_tx(
       default: data_buff <= data_buff;
     endcase
   end
-  
+
   //tx routing
   always@* begin
     case(state)
@@ -166,7 +168,7 @@ module uart_tx(
       default: tx = 1'b1;
     endcase
   end
-  
+
   //Parity calc
   always@(posedge clk_uart) begin
     if(in_Start) begin //reset
@@ -189,9 +191,11 @@ module uart_rx(
   input data_size, //0: 7bit; 1: 8bit
   input parity_en,
   input [1:0] parity_mode, //11: odd; 10: even, 01: mark(1), 00: space(0)
+  input stop_bit_size, //0: 1bit; 1: 2bit
   //Data interface
   output reg [7:0] data,
   output reg error_parity,
+  output reg error_frame,
   output ready,
   output newData);
   localparam READY = 3'b000,
@@ -202,19 +206,18 @@ module uart_rx(
   reg [2:0] counter; 
   reg [2:0] state;
   reg [7:0] data_buff;
-  wire in_Ready, in_Start, in_Data, in_Parity, in_End;
   reg parity_calc, in_End_d, en;
 
   //Decode states
-  assign in_Ready = (state == READY);
-  assign in_Start = (state == START);
-  assign in_Data = (state == DATA);
-  assign in_Parity = (state == PARITY);
-  assign in_End = (state == END);
+  wire in_Ready = (state == READY);
+  wire in_Start = (state == START);
+  wire in_Data = (state == DATA);
+  wire in_Parity = (state == PARITY);
+  wire in_End = (state == END);
   assign ready = in_Ready;
 
   assign newData = ~in_End & in_End_d; //New data add negedge of in_End
-  assign countDONE = in_Data & (counter == {2'b11, data_size});
+  wire countDONE = (in_End & (counter[0] == stop_bit_size)) | (in_Data & (counter == {2'b11, data_size}));
   assign uart_enable = en & (~in_End_d | in_End);
 
   //internal enable
@@ -226,17 +229,18 @@ module uart_rx(
       1'b1: en <= ~in_End_d | in_End;
     endcase
   end
-  
+
   //Counter
   always@(negedge clk_uart or posedge rst) begin
     if(rst) begin
       counter <= 3'd0;
     end else case(state)
       DATA: counter <= (countDONE) ? 3'd0 : (counter + 3'd1);
+      END: counter <= (countDONE) ? 3'd0 : (counter + 3'd1);
       default: counter <= 3'd0;
     endcase
   end
-  
+
   //State transactions
   always@(negedge clk_uart or posedge rst) begin
     if(rst) begin
@@ -246,7 +250,7 @@ module uart_rx(
       START: state <= DATA;
       DATA: state <= (countDONE) ? ((parity_en) ? PARITY : END) : state;
       PARITY: state <= END;
-      END: state <= READY;
+      END: state <= (countDONE) ? READY : state;
       default: state <= READY;
     endcase
   end
@@ -258,7 +262,7 @@ module uart_rx(
   always@(posedge clk) begin
     data <= (~in_End_d & in_End) ? data_buff : data;
   end
-  
+
   //Handle data_buff
   always@(posedge clk_uart) begin
     case(state)
@@ -268,16 +272,25 @@ module uart_rx(
       default: data_buff <= data_buff;
     endcase
   end
-  
-  //Parity check
-  always@(posedge clk) begin
-    if(rst) begin
-      error_parity <= 1'b0;
+
+  //Frame error
+  always@(posedge clk_uart) begin
+    if(rst | in_Start) begin
+      error_frame <= 1'b0;
     end else begin
-      error_parity <= (in_Parity) ? (rx != parity_calc) : error_parity;
+      error_frame <= (in_End) ? ~rx | error_frame : error_frame;
     end
   end
-  
+
+  //Parity check
+  always@(posedge clk_uart) begin
+    if(rst | in_Start) begin
+      error_parity <= 1'b0;
+    end else begin
+      error_parity <= (in_Parity) ? (rx != parity_calc) | error_parity : error_parity;
+    end
+  end
+
   //Parity calc
   always@(posedge clk_uart) begin
     if(in_Start) begin //reset

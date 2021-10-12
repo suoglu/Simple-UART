@@ -4,7 +4,7 @@
  * ------------------------------------------------ *
  * File        : sim_tx.v                           *
  * Author      : Yigit Suoglu                       *
- * Last Edit   : 23/05/2021                         *
+ * Last Edit   : 12/10/2021                         *
  * ------------------------------------------------ *
  * Description : Simulation for Transmitter module  *
  * ------------------------------------------------ */
@@ -14,7 +14,7 @@
 
 module testbenchtx();
   reg clk, rst, data_size, parity_en, stop_bit_size, send;
-  wire tx, ready, uartClock, uartEn,uartClock_rx,uartEn_rx, valid , new_data;
+  wire tx, ready, uartClock, uartEn,uartClock_rx,uartEn_rx, err_crc, err_frame , new_data;
   reg [1:0] parity_mode;
   reg [7:0] data;
   wire [7:0] data_rx;
@@ -24,11 +24,11 @@ module testbenchtx();
    //0: 76,8kHz (13us); 1: 460,8kHz (2,17us)
   //parity_mode: 11: odd; 10: even, 01: mark(1), 00: space(0)
   uart_tx uut(clk, rst, tx, uartClock, uartEn, data_size, parity_en, parity_mode, stop_bit_size, data, ready, send);
-  uart_rx helper(clk, rst, tx, uartClock_rx, uartEn_rx, data_size, parity_en, parity_mode, data_rx, valid, , new_data);
+  uart_rx helper(clk, rst, tx, uartClock_rx, uartEn_rx, data_size, parity_en, parity_mode, stop_bit_size, data_rx, err_crc, err_frame, , new_data);
 
-  baudRGen clkGenUART_rx(clk,rst,1'b1, 3'd0,uartEn_rx,uartClock_rx);
+  uart_clk_gen clkGenUART_rx(clk,rst,uartEn_rx,uartClock_rx,1'b1, 3'd0);
 
-  baudRGen clkGenUART (clk,rst,1'b1, 3'd0,uartEn,uartClock);
+  uart_clk_gen clkGenUART (clk,rst,uartEn,uartClock,1'b1, 3'd0);
 
 /*      initial //Tracked signals & Total sim time
        begin
@@ -70,6 +70,9 @@ module testbenchtx();
             #20
             send <= 0;
             #30000
+            data <= 8'h55;
             send <= 1;
+            #30000
+            $finish;
         end
 endmodule
