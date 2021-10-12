@@ -42,9 +42,31 @@ module uart_transceiver(
   output ready_rx,
   input send);
   
-  uart_rx RxUART(clk, rst, rx, clk_uart_rx, uart_enable_rx, data_size, parity_en, parity_mode, data_o, error_parity, ready_rx, new_data);
+  uart_rx RxUART(.clk(clk), 
+                 .rst(rst),  
+                 .rx(rx),  
+                 .clk_uart(clk_uart_rx),  
+                 .uart_enable(uart_enable_rx),  
+                 .data_size(data_size),  
+                 .parity_en(parity_en),  
+                 .parity_mode(parity_mode),  
+                 .data(data_o),  
+                 .error_parity(error_parity),  
+                 .ready(ready_rx),  
+                 .newData(new_data));
 
-  uart_tx TxUART(clk, rst, tx, clk_uart_tx, uart_enable_tx, data_size, parity_en, parity_mode, stop_bit_size, data_i, ready_tx, send);
+  uart_tx TxUART(.clk(clk),  
+                 .rst(rst),  
+                 .tx(tx),  
+                 .clk_uart(clk_uart_tx),  
+                 .uart_enable(uart_enable_tx),  
+                 .data_size(data_size),  
+                 .parity_en(parity_en),  
+                 .parity_mode(parity_mode),  
+                 .stop_bit_size(stop_bit_size),  
+                 .data(data_i),  
+                 .ready(ready_tx),  
+                 .send(send));
 endmodule//uart_dual
 
 module uart_tx(
