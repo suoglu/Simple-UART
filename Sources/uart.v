@@ -36,13 +36,13 @@ module uart_transceiver(
   //Data interface
   input [7:0] data_i,
   output [7:0] data_o,
-  output valid,
+  output error_parity,
   output new_data,
   output ready_tx,
   output ready_rx,
   input send);
   
-  uart_rx RxUART(clk, rst, rx, clk_uart_rx, uart_enable_rx, data_size, parity_en, parity_mode, data_o, valid, ready_rx, new_data);
+  uart_rx RxUART(clk, rst, rx, clk_uart_rx, uart_enable_rx, data_size, parity_en, parity_mode, data_o, error_parity, ready_rx, new_data);
 
   uart_tx TxUART(clk, rst, tx, clk_uart_tx, uart_enable_tx, data_size, parity_en, parity_mode, stop_bit_size, data_i, ready_tx, send);
 endmodule//uart_dual
@@ -169,7 +169,7 @@ module uart_rx(
   input [1:0] parity_mode, //11: odd; 10: even, 01: mark(1), 00: space(0)
   //Data interface
   output reg [7:0] data,
-  output reg valid,
+  output reg error_parity,
   output ready,
   output newData);
   localparam READY = 3'b000,
@@ -250,9 +250,9 @@ module uart_rx(
   //Parity check
   always@(posedge clk) begin
     if(rst) begin
-      valid <= 1'b0;
+      error_parity <= 1'b0;
     end else begin
-      valid <= (in_Parity) ? (rx == parity_calc) : valid;
+      error_parity <= (in_Parity) ? (rx != parity_calc) : error_parity;
     end
   end
   
