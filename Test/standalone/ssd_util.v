@@ -1,3 +1,4 @@
+`timescale 1ns / 1ps
 /* ----------------------------------------------------- *
  * Title       : Seven Segment Display (SSD) Utilities   *
  * Project     : Verilog Utility Modules                 *

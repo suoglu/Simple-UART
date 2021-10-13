@@ -1,3 +1,4 @@
+`timescale 1ns / 1ps
 /* ------------------------------------------------ *
  * Title       : UART tester board                  *
  * Project     : Simple UART                        *

@@ -1,3 +1,4 @@
+`timescale 1ns / 1ps
 /* ------------------------------------------ *
  * Title       : Button Debouncer             *
  * Project     : Verilog Utility Modules      *
