@@ -1,10 +1,10 @@
 /* ------------------------------------------------ *
- * Title       : UART interface  v1.4               *
+ * Title       : UART interface  v1.4.1             *
  * Project     : Simple UART                        *
  * ------------------------------------------------ *
  * File        : uart.v                             *
  * Author      : Yigit Suoglu                       *
- * Last Edit   : 12/10/2021                         *
+ * Last Edit   : 17/10/2021                         *
  * ------------------------------------------------ *
  * Description : UART communication modules         *
  * ------------------------------------------------ *
@@ -16,6 +16,7 @@
  *               of UART modules                    *
  *     v1.3    : More compact coding style          *
  *     v1.4    : Detect Frame error                 *
+ *     v1.4.1  : Receive~ Fixed data out for 7 bit  *
  * ------------------------------------------------ */
 
 module uart_transceiver(
@@ -260,7 +261,10 @@ module uart_rx(
 
   //Store received data
   always@(posedge clk) begin
-    data <= (~in_End_d & in_End) ? data_buff : data;
+    data <= (~in_End_d & in_End) ? 
+                    ((data_size) ? data_buff : 
+                     {1'b0, data_buff[7:1]}) : 
+                                         data;
   end
 
   //Handle data_buff
@@ -268,7 +272,6 @@ module uart_rx(
     case(state)
       START: data_buff <= 8'd0;
       DATA: data_buff <= {rx, data_buff[7:1]};
-      END: data_buff <= (data_size) ? data_buff : (data_buff >> 1);
       default: data_buff <= data_buff;
     endcase
   end
