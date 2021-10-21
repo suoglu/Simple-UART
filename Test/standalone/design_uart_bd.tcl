@@ -1,6 +1,6 @@
 
 ################################################################
-# This is a generated script based on design: design_uart_bd
+# This is a generated script based on design: design_2
 #
 # Though there are limitations about the generated script,
 # the main purpose of this utility is to make learning
@@ -20,7 +20,7 @@ set script_folder [_tcl::get_script_folder]
 ################################################################
 # Check if script is running in correct Vivado version.
 ################################################################
-set scripts_vivado_version 2020.2
+set scripts_vivado_version 2021.1
 set current_vivado_version [version -short]
 
 if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
@@ -35,7 +35,7 @@ if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
 ################################################################
 
 # To test this script, run the following commands from Vivado Tcl console:
-# source design_uart_bd_script.tcl
+# source design_2_script.tcl
 
 
 # The design that will be created by this Tcl script contains the following 
@@ -57,7 +57,7 @@ if { $list_projs eq "" } {
 
 # CHANGE DESIGN NAME HERE
 variable design_name
-set design_name design_uart_bd
+set design_name design_2
 
 # If you do not already have an existing IP Integrator design open,
 # you can create a design using the following command:
@@ -125,6 +125,32 @@ if { $nRet != 0 } {
 }
 
 set bCheckIPsPassed 1
+##################################################################
+# CHECK IPs
+##################################################################
+set bCheckIPs 1
+if { $bCheckIPs == 1 } {
+   set list_check_ips "\ 
+xilinx.com:ip:system_ila:1.1\
+"
+
+   set list_ips_missing ""
+   common::send_gid_msg -ssname BD::TCL -id 2011 -severity "INFO" "Checking if the following IPs exist in the project's IP catalog: $list_check_ips ."
+
+   foreach ip_vlnv $list_check_ips {
+      set ip_obj [get_ipdefs -all $ip_vlnv]
+      if { $ip_obj eq "" } {
+         lappend list_ips_missing $ip_vlnv
+      }
+   }
+
+   if { $list_ips_missing ne "" } {
+      catch {common::send_gid_msg -ssname BD::TCL -id 2012 -severity "ERROR" "The following IPs are not found in the IP Catalog:\n  $list_ips_missing\n\nResolution: Please add the repository containing the IP(s) to the project." }
+      set bCheckIPsPassed 0
+   }
+
+}
+
 ##################################################################
 # CHECK Modules
 ##################################################################
@@ -209,6 +235,7 @@ proc create_root_design { parentCell } {
   set_property -dict [ list \
    CONFIG.ASSOCIATED_RESET {rst} \
  ] $clk
+  set data_size [ create_bd_port -dir O data_size ]
   set divRatio [ create_bd_port -dir I -from 2 -to 0 divRatio ]
   set newData [ create_bd_port -dir O newData ]
   set parity_en [ create_bd_port -dir I parity_en ]
@@ -221,9 +248,11 @@ proc create_root_design { parentCell } {
  ] $rst
   set rx [ create_bd_port -dir I rx ]
   set seg [ create_bd_port -dir O -from 6 -to 0 seg ]
+  set stop_bit_size [ create_bd_port -dir O stop_bit_size ]
   set sw [ create_bd_port -dir I -from 7 -to 0 sw ]
   set tx [ create_bd_port -dir O tx ]
-  set valid [ create_bd_port -dir O valid ]
+  set uartClock_rx [ create_bd_port -dir O uartClock_rx ]
+  set uartClock_tx [ create_bd_port -dir O uartClock_tx ]
 
   # Create instance: board_0, and set properties
   set block_name board
@@ -236,6 +265,34 @@ proc create_root_design { parentCell } {
      return 1
    }
   
+  # Create instance: system_ila_0, and set properties
+  set system_ila_0 [ create_bd_cell -type ip -vlnv xilinx.com:ip:system_ila:1.1 system_ila_0 ]
+  set_property -dict [ list \
+   CONFIG.ALL_PROBE_SAME_MU_CNT {2} \
+   CONFIG.C_ADV_TRIGGER {true} \
+   CONFIG.C_EN_STRG_QUAL {1} \
+   CONFIG.C_MON_TYPE {NATIVE} \
+   CONFIG.C_NUM_OF_PROBES {9} \
+   CONFIG.C_PROBE0_MU_CNT {2} \
+   CONFIG.C_PROBE0_TYPE {1} \
+   CONFIG.C_PROBE1_MU_CNT {2} \
+   CONFIG.C_PROBE1_TYPE {0} \
+   CONFIG.C_PROBE2_MU_CNT {2} \
+   CONFIG.C_PROBE2_TYPE {1} \
+   CONFIG.C_PROBE3_MU_CNT {2} \
+   CONFIG.C_PROBE3_TYPE {1} \
+   CONFIG.C_PROBE4_MU_CNT {2} \
+   CONFIG.C_PROBE4_TYPE {0} \
+   CONFIG.C_PROBE5_MU_CNT {2} \
+   CONFIG.C_PROBE5_TYPE {0} \
+   CONFIG.C_PROBE6_MU_CNT {2} \
+   CONFIG.C_PROBE6_TYPE {0} \
+   CONFIG.C_PROBE7_MU_CNT {2} \
+   CONFIG.C_PROBE7_TYPE {1} \
+   CONFIG.C_PROBE8_MU_CNT {2} \
+   CONFIG.C_PROBE8_TYPE {1} \
+ ] $system_ila_0
+
   # Create instance: uart_clk_gen_0, and set properties
   set block_name uart_clk_gen
   set block_cell_name uart_clk_gen_0
@@ -283,30 +340,40 @@ proc create_root_design { parentCell } {
   # Create port connections
   connect_bd_net -net baseClock_freq_1 [get_bd_ports baseClock_freq] [get_bd_pins uart_clk_gen_0/baseClock_freq] [get_bd_pins uart_clk_gen_rx/baseClock_freq]
   connect_bd_net -net board_0_an [get_bd_ports an] [get_bd_pins board_0/an]
-  connect_bd_net -net board_0_data_i [get_bd_pins board_0/data_i] [get_bd_pins uart_tx_0/data]
-  connect_bd_net -net board_0_data_size [get_bd_pins board_0/data_size] [get_bd_pins uart_rx_0/data_size] [get_bd_pins uart_tx_0/data_size]
+  connect_bd_net -net board_0_data_i [get_bd_pins board_0/data_i] [get_bd_pins system_ila_0/probe0] [get_bd_pins uart_tx_0/data]
+  set_property HDL_ATTRIBUTE.DEBUG {true} [get_bd_nets board_0_data_i]
+  connect_bd_net -net board_0_data_size [get_bd_ports data_size] [get_bd_pins board_0/data_size] [get_bd_pins uart_rx_0/data_size] [get_bd_pins uart_tx_0/data_size]
   connect_bd_net -net board_0_seg [get_bd_ports seg] [get_bd_pins board_0/seg]
   connect_bd_net -net board_0_send [get_bd_pins board_0/send] [get_bd_pins uart_tx_0/send]
-  connect_bd_net -net board_0_stop_bit_size [get_bd_pins board_0/stop_bit_size] [get_bd_pins uart_tx_0/stop_bit_size]
+  connect_bd_net -net board_0_stop_bit_size [get_bd_ports stop_bit_size] [get_bd_pins board_0/stop_bit_size] [get_bd_pins uart_rx_0/stop_bit_size] [get_bd_pins uart_tx_0/stop_bit_size]
   connect_bd_net -net btnD_1 [get_bd_ports btnD] [get_bd_pins board_0/btnD]
   connect_bd_net -net btnR_1 [get_bd_ports btnR] [get_bd_pins board_0/btnR]
   connect_bd_net -net btnU_1 [get_bd_ports btnU] [get_bd_pins board_0/btnU]
-  connect_bd_net -net clk_1 [get_bd_ports clk] [get_bd_pins board_0/clk] [get_bd_pins uart_clk_gen_0/clk] [get_bd_pins uart_clk_gen_rx/clk] [get_bd_pins uart_rx_0/clk] [get_bd_pins uart_tx_0/clk]
+  connect_bd_net -net clk_1 [get_bd_ports clk] [get_bd_pins board_0/clk] [get_bd_pins system_ila_0/clk] [get_bd_pins uart_clk_gen_0/clk] [get_bd_pins uart_clk_gen_rx/clk] [get_bd_pins uart_rx_0/clk] [get_bd_pins uart_tx_0/clk]
   connect_bd_net -net divRatio_1 [get_bd_ports divRatio] [get_bd_pins uart_clk_gen_0/divRatio] [get_bd_pins uart_clk_gen_rx/divRatio]
+  connect_bd_net -net error_frame [get_bd_pins system_ila_0/probe1] [get_bd_pins uart_rx_0/error_frame]
+  set_property HDL_ATTRIBUTE.DEBUG {true} [get_bd_nets error_frame]
+  connect_bd_net -net error_parity [get_bd_pins system_ila_0/probe2] [get_bd_pins uart_rx_0/error_parity]
+  set_property HDL_ATTRIBUTE.DEBUG {true} [get_bd_nets error_parity]
   connect_bd_net -net parity_en_1 [get_bd_ports parity_en] [get_bd_pins uart_rx_0/parity_en] [get_bd_pins uart_tx_0/parity_en]
   connect_bd_net -net parity_mode_1 [get_bd_ports parity_mode] [get_bd_pins uart_rx_0/parity_mode] [get_bd_pins uart_tx_0/parity_mode]
   connect_bd_net -net rst_1 [get_bd_ports rst] [get_bd_pins board_0/rst] [get_bd_pins uart_clk_gen_0/rst] [get_bd_pins uart_clk_gen_rx/rst] [get_bd_pins uart_rx_0/rst] [get_bd_pins uart_tx_0/rst]
-  connect_bd_net -net rx_1 [get_bd_ports rx] [get_bd_pins uart_rx_0/rx]
+  connect_bd_net -net rx_1 [get_bd_ports rx] [get_bd_pins system_ila_0/probe7] [get_bd_pins uart_rx_0/rx]
+  set_property HDL_ATTRIBUTE.DEBUG {true} [get_bd_nets rx_1]
   connect_bd_net -net sw_1 [get_bd_ports sw] [get_bd_pins board_0/sw]
-  connect_bd_net -net uart_clk_gen_0_clk_uart [get_bd_pins uart_clk_gen_rx/clk_uart] [get_bd_pins uart_rx_0/clk_uart]
-  connect_bd_net -net uart_clk_gen_0_clk_uart1 [get_bd_pins uart_clk_gen_0/clk_uart] [get_bd_pins uart_tx_0/clk_uart]
-  connect_bd_net -net uart_rx_0_data [get_bd_pins board_0/data_o] [get_bd_pins uart_rx_0/data]
-  connect_bd_net -net uart_rx_0_newData [get_bd_ports newData] [get_bd_pins uart_rx_0/newData]
-  connect_bd_net -net uart_rx_0_ready [get_bd_ports ready_rx] [get_bd_pins uart_rx_0/ready]
+  connect_bd_net -net uart_clk_gen_0_clk_uart [get_bd_ports uartClock_rx] [get_bd_pins uart_clk_gen_rx/clk_uart] [get_bd_pins uart_rx_0/clk_uart]
+  connect_bd_net -net uart_clk_gen_0_clk_uart1 [get_bd_ports uartClock_tx] [get_bd_pins uart_clk_gen_0/clk_uart] [get_bd_pins uart_tx_0/clk_uart]
+  connect_bd_net -net uart_rx_0_data [get_bd_pins board_0/data_o] [get_bd_pins system_ila_0/probe3] [get_bd_pins uart_rx_0/data]
+  set_property HDL_ATTRIBUTE.DEBUG {true} [get_bd_nets uart_rx_0_data]
+  connect_bd_net -net uart_rx_0_newData [get_bd_ports newData] [get_bd_pins system_ila_0/probe4] [get_bd_pins uart_rx_0/newData]
+  set_property HDL_ATTRIBUTE.DEBUG {true} [get_bd_nets uart_rx_0_newData]
+  connect_bd_net -net uart_rx_0_ready [get_bd_ports ready_rx] [get_bd_pins system_ila_0/probe5] [get_bd_pins uart_rx_0/ready]
+  set_property HDL_ATTRIBUTE.DEBUG {true} [get_bd_nets uart_rx_0_ready]
   connect_bd_net -net uart_rx_0_uart_enable [get_bd_pins uart_clk_gen_rx/en] [get_bd_pins uart_rx_0/uart_enable]
-  connect_bd_net -net uart_rx_0_valid [get_bd_ports valid] [get_bd_pins uart_rx_0/valid]
-  connect_bd_net -net uart_tx_0_ready [get_bd_ports ready_tx] [get_bd_pins uart_tx_0/ready]
-  connect_bd_net -net uart_tx_0_tx [get_bd_ports tx] [get_bd_pins uart_tx_0/tx]
+  connect_bd_net -net uart_tx_0_ready [get_bd_ports ready_tx] [get_bd_pins system_ila_0/probe6] [get_bd_pins uart_tx_0/ready]
+  set_property HDL_ATTRIBUTE.DEBUG {true} [get_bd_nets uart_tx_0_ready]
+  connect_bd_net -net uart_tx_0_tx [get_bd_ports tx] [get_bd_pins system_ila_0/probe8] [get_bd_pins uart_tx_0/tx]
+  set_property HDL_ATTRIBUTE.DEBUG {true} [get_bd_nets uart_tx_0_tx]
   connect_bd_net -net uart_tx_0_uart_enable [get_bd_pins uart_clk_gen_0/en] [get_bd_pins uart_tx_0/uart_enable]
 
   # Create address segments

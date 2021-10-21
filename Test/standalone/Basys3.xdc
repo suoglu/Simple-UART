@@ -74,8 +74,8 @@ set_property PACKAGE_PIN N3 [get_ports {ready_tx}]
 	set_property IOSTANDARD LVCMOS33 [get_ports {ready_tx}]
 set_property PACKAGE_PIN P1 [get_ports {ready_rx}]
 	set_property IOSTANDARD LVCMOS33 [get_ports {ready_rx}]
-set_property PACKAGE_PIN L1 [get_ports {valid}]
-	set_property IOSTANDARD LVCMOS33 [get_ports {valid}]
+# set_property PACKAGE_PIN L1 [get_ports {valid}]
+# 	set_property IOSTANDARD LVCMOS33 [get_ports {valid}]
 
 
 ##7 segment display seg[6:0] = gfedcba
