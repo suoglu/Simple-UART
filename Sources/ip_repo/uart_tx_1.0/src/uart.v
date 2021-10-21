@@ -1,3 +1,4 @@
+`timescale 1 ns / 1 ps
 /* ------------------------------------------------ *
  * Title       : UART interface  v1.4               *
  * Project     : Simple UART                        *
@@ -16,6 +17,8 @@
  *               of UART modules                    *
  *     v1.3    : More compact coding style          *
  *     v1.4    : Detect Frame error                 *
+ *     v1.4.1  : Receive~ Fixed data out for 7 bit  *
+ *     v1.5    : All regs use main clk and sync rst *
  * ------------------------------------------------ */
 
 module uart_tx(
@@ -53,6 +56,13 @@ module uart_tx(
   wire in_End = (state == END);
   assign ready = in_Ready;
 
+  //Detect edge of uart clk
+  reg clk_uart_d;
+  always@(posedge clk) begin
+    clk_uart_d <= clk_uart;
+  end
+  wire clk_uart_negedge = ~clk_uart & clk_uart_d ;
+  wire clk_uart_posedge = clk_uart & ~clk_uart_d ;
 
   wire countDONE = (in_End & (counter[0] == stop_bit_size)) | (in_Data & (counter == {2'b11, data_size}));
   assign uart_enable = en & (~in_End_d | in_End);
@@ -68,10 +78,10 @@ module uart_tx(
   end
 
   //State transactions
-  always@(negedge clk_uart or posedge rst) begin
+  always@(posedge clk) begin
     if(rst) begin
       state <= READY;
-    end else case(state)
+    end else if(clk_uart_negedge) case(state)
       READY: state <= (en) ? START : state;
       START: state <= DATA;
       DATA: state <= (countDONE) ? ((parity_en) ? PARITY : END) : state;
@@ -85,10 +95,10 @@ module uart_tx(
   always@(posedge clk) in_End_d <= in_End;
 
   //Counter
-  always@(negedge clk_uart or posedge rst) begin
+  always@(posedge clk) begin
     if(rst) begin
       counter <= 3'd0;
-    end else case(state)
+    end else if(clk_uart_negedge) case(state)
       DATA: counter <= (countDONE) ? 3'd0 : (counter + 3'd1);
       END: counter <= (countDONE) ? 3'd0 : (counter + 3'd1);
       default: counter <= 3'd0;
@@ -96,12 +106,13 @@ module uart_tx(
   end
 
   //handle data_buff
-  always@(negedge clk_uart) begin
-    case(state)
-      START: data_buff <= data;
-      DATA: data_buff <= (data_buff >> 1);
-      default: data_buff <= data_buff;
-    endcase
+  always@(posedge clk) begin
+    if(clk_uart_negedge)
+      case(state)
+        START: data_buff <= data;
+        DATA: data_buff <= (data_buff >> 1);
+        default: data_buff <= data_buff;
+      endcase
   end
 
   //tx routing
@@ -115,10 +126,10 @@ module uart_tx(
   end
 
   //Parity calc
-  always@(posedge clk_uart) begin
+  always@(posedge clk) begin
     if(in_Start) begin //reset
       parity_calc <= parity_mode[0];
-    end else begin
+    end else if(clk_uart_posedge) begin
       parity_calc <= (in_Data) ? (parity_calc ^ (tx & parity_mode[1])) : parity_calc;
     end
   end
