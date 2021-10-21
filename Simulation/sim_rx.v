@@ -129,7 +129,10 @@ module testbenchrx();
               end
             #2160
             rx = 1;
-            #10000
+            #5000
+            data_size = 0;
+            parity_en = 0;
+            #5000
             rx = 0; //start
             #2160
             rx = send_buff[0]; //data 0
@@ -145,19 +148,9 @@ module testbenchrx();
             rx = send_buff[5]; //data 5
             #2160
             rx = send_buff[6]; //data 6
-            if(data_size)
-              begin
-                #2160
-                rx = send_buff[7]; //data 7
-              end
-            if(parity_en)
-              begin
-                #2160
-                rx = send_buff[8]; //parity
-              end
             #2160
-            rx = 0; //frame error
-            #2160
+            rx = 0; //data 7
+            #3000
             rx = 1;
             #10000
             $finish;
