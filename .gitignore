@@ -4,6 +4,7 @@
 # Vivado & Vitis directory
 *vivado*
 *vitis*
+.Xil
 
 # For icarus Verilog
 *.out
@@ -19,3 +20,9 @@ WIP*
 #Text editor configs
 *.geany
 .vscode
+
+#Repo specific
+main.cpp
+updatemem*
+xparameters.h
+*.log
