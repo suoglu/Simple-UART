@@ -5,24 +5,24 @@
  *  File        : uart_tx.cpp                    *
  *  Author      : Yigit Suoglu                   *
  *  License     : EUPL-1.2                       *
- *  Last Edit   : 21/10/2021                     *
+ *  Last Edit   : 24/10/2021                     *
  *-----------------------------------------------*
  *  Description : SW driver for UART transmitter *
  *-----------------------------------------------*/
 #include "uart_tx.h"
 
 uart_tx::uart_tx():
-tx(reinterpret_cast<unsigned long*>(XPAR_UART_TX_0_S_AXI_BASEADDR)),
-config(reinterpret_cast<unsigned long*>(XPAR_UART_TX_0_S_AXI_BASEADDR+4)),
-status(reinterpret_cast<unsigned long*>(XPAR_UART_TX_0_S_AXI_BASEADDR+8)),
-tx_waiting(reinterpret_cast<unsigned long*>(XPAR_UART_TX_0_S_AXI_BASEADDR+12)){
+  tx(reinterpret_cast<unsigned long*>(XPAR_UART_TX_0_S_AXI_BASEADDR)),
+  config(reinterpret_cast<unsigned long*>(XPAR_UART_TX_0_S_AXI_BASEADDR+4u)),
+  status(reinterpret_cast<unsigned long*>(XPAR_UART_TX_0_S_AXI_BASEADDR+8u)),
+  tx_waiting(reinterpret_cast<unsigned long*>(XPAR_UART_TX_0_S_AXI_BASEADDR+12u)){
 }
 
 uart_tx::uart_tx(unsigned long base_address):
-tx(reinterpret_cast<unsigned long*>(base_address)),
-config(reinterpret_cast<unsigned long*>(base_address+4)),
-status(reinterpret_cast<unsigned long*>(base_address+8)),
-tx_waiting(reinterpret_cast<unsigned long*>(base_address+12)){
+  tx(reinterpret_cast<unsigned long*>(base_address)),
+  config(reinterpret_cast<unsigned long*>(base_address+4u)),
+  status(reinterpret_cast<unsigned long*>(base_address+8u)),
+  tx_waiting(reinterpret_cast<unsigned long*>(base_address+12u)){
 }
 
 void uart_tx::send(unsigned char data){
@@ -46,63 +46,84 @@ void uart_tx::setConfig(unsigned long conf){
 }
 
 bool uart_tx::isFull(){
-  return (getStatus() & 0x2) == 0x2;
+  return (getStatus() & 0x2ul) == 0x2ul;
 }
 
 bool uart_tx::isEmpty(){
-  return (getStatus() & 0x1) == 0x1;
+  return (getStatus() & 0x1ul) == 0x1ul;
 }
 
 void uart_tx::interrupt_enable(bool enable){
   if(enable){
-    *config |= 0x1;
+    *config |= 0x1ul;
   }else{
-    *config &= 0xFFFFFFFE;
+    *config &= 0xFFFFFFFEul;
   }
 }
 
 void uart_tx::clearBuffer(){
-  *config |= 0x400;
+  *config |= 0x400ul;
 }
 
 void uart_tx::blockingTx(bool enable){
   if(enable){
-    *config |= 0x800;
+    *config |= 0x800ul;
   }else{
-    *config &= 0xFFFFF7FF;
+    *config &= 0xFFFFF7FFul;
   }
 }
 
 void uart_tx::parityEnable(bool enable){
   if(enable){
-    *config |= 0x8;
+    *config |= 0x8ul;
   }else{
-    *config &= 0xFFFFFFF7;
+    *config &= 0xFFFFFFF7ul;
   }
 }
 
 void uart_tx::parityEnable(parity par, bool enable){
   unsigned long config_hold;
   if(enable){
-    config_hold = *config | 0x8;
+    config_hold = *config | 0x8ul;
   }else{
-    config_hold = *config & 0xFFFFFFF7;
+    config_hold = *config & 0xFFFFFFF7ul;
   }
-  *config = (config_hold & 0xFFFFFFCF) | (static_cast<unsigned long>(par)<<4);
+  *config = (config_hold & 0xFFFFFFCFul) | (static_cast<unsigned long>(par)<<4);
 }
 
 void uart_tx::parityChange(parity par){
-  *config = (*config & 0xFFFFFFCF) | (static_cast<unsigned long>(par)<<4);
+  *config = (*config & 0xFFFFFFCFul) | (static_cast<unsigned long>(par)<<4);
 }
 
 void uart_tx::dataBitChange(databits bit_size){
-  *config = (*config & 0xFFFFFFFB) | (static_cast<unsigned long>(bit_size)<<2);
+  *config = (*config & 0xFFFFFFFBul) | (static_cast<unsigned long>(bit_size)<<2);
 }
 
 void uart_tx::stopBitChange(stopbits bit_size){
-  *config = (*config & 0xFFFFFFFD) | (static_cast<unsigned long>(bit_size)<<1);
+  *config = (*config & 0xFFFFFFFDul) | (static_cast<unsigned long>(bit_size)<<1);
 }
 
 void uart_tx::bitsChange(databits dbit_size, stopbits sbit_size){
-  *config = (*config & 0xFFFFFFF9) | (static_cast<unsigned long>(sbit_size)<<1) | (static_cast<unsigned long>(dbit_size)<<2);
+  *config = (*config & 0xFFFFFFF9ul) | (static_cast<unsigned long>(sbit_size)<<1) | (static_cast<unsigned long>(dbit_size)<<2);
+}
+
+void uart_tx::setBaudRate(unsigned char bRate){
+  *config = (*config & 0xFFFFFC3Ful) | (bRate << 6);
+}
+
+void uart_tx::setBaudRate(baud_rate bRate){
+  setBaudRate(static_cast<unsigned char>(bRate));
+}
+
+void uart_tx::setBaudRate(bool fastMainClk, unsigned char divRatio){
+  unsigned char bRate = divRatio & 0x7;
+  if(fastMainClk){
+    bRate |= 0x4u;
+  }
+  setBaudRate(bRate);
+}
+
+baud_rate uart_tx::getBaudRate(){
+  unsigned char bRate = static_cast<unsigned char>((*config >> 6) & 0xFu);
+  return static_cast<baud_rate>(bRate);
 }

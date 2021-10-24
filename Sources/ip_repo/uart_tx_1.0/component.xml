@@ -288,7 +288,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>a16cd8ea</spirit:value>
+            <spirit:value>3846536d</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -304,7 +304,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>a16cd8ea</spirit:value>
+            <spirit:value>3846536d</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -318,7 +318,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>3eefd8b8</spirit:value>
+            <spirit:value>35ceea00</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -332,7 +332,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>2e1448e4</spirit:value>
+            <spirit:value>367c3010</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -361,7 +361,7 @@
         <spirit:parameters>
           <spirit:parameter>
             <spirit:name>viewChecksum</spirit:name>
-            <spirit:value>56d87227</spirit:value>
+            <spirit:value>d1523392</spirit:value>
           </spirit:parameter>
         </spirit:parameters>
       </spirit:view>
@@ -719,7 +719,7 @@
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>BUFFER_SIZE</spirit:name>
         <spirit:displayName>Buffer Size</spirit:displayName>
-        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.BUFFER_SIZE">16</spirit:value>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.BUFFER_SIZE">8</spirit:value>
       </spirit:modelParameter>
       <spirit:modelParameter spirit:dataType="integer">
         <spirit:name>AXI_CLOCK_PERIOD</spirit:name>
@@ -803,6 +803,22 @@
       <spirit:enumeration spirit:text="Space">0</spirit:enumeration>
     </spirit:choice>
     <spirit:choice>
+      <spirit:name>choice_pairs_43a8a040</spirit:name>
+      <spirit:enumeration spirit:text="4 entries">2</spirit:enumeration>
+      <spirit:enumeration spirit:text="8 entries">3</spirit:enumeration>
+      <spirit:enumeration spirit:text="16 entries">4</spirit:enumeration>
+      <spirit:enumeration spirit:text="32 entries">5</spirit:enumeration>
+      <spirit:enumeration spirit:text="64 entries">6</spirit:enumeration>
+      <spirit:enumeration spirit:text="128 entries">7</spirit:enumeration>
+      <spirit:enumeration spirit:text="256 entries">8</spirit:enumeration>
+      <spirit:enumeration spirit:text="512 entries">9</spirit:enumeration>
+      <spirit:enumeration spirit:text="1024 entries">10</spirit:enumeration>
+      <spirit:enumeration spirit:text="2048 entries">11</spirit:enumeration>
+      <spirit:enumeration spirit:text="4096 entries">12</spirit:enumeration>
+      <spirit:enumeration spirit:text="8192 entries">13</spirit:enumeration>
+      <spirit:enumeration spirit:text="16384 entries">14</spirit:enumeration>
+    </spirit:choice>
+    <spirit:choice>
       <spirit:name>choice_pairs_8b551e9b</spirit:name>
       <spirit:enumeration spirit:text="76,8 kHz">0</spirit:enumeration>
       <spirit:enumeration spirit:text="460,8 kHz">1</spirit:enumeration>
@@ -846,7 +862,7 @@
       <spirit:file>
         <spirit:name>hdl/uart_tx_v1_0.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_a1226e1f</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_a2871fd4</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -899,7 +915,7 @@
       <spirit:file>
         <spirit:name>xgui/uart_tx_v1_0.tcl</spirit:name>
         <spirit:fileType>tclSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_2e1448e4</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_367c3010</spirit:userFileType>
         <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
@@ -932,7 +948,7 @@
       </spirit:file>
     </spirit:fileSet>
   </spirit:fileSets>
-  <spirit:description>UART transmitter (without a receiver)</spirit:description>
+  <spirit:description>UART transmitter with an AXI-Lite interface</spirit:description>
   <spirit:parameters>
     <spirit:parameter>
       <spirit:name>Component_Name</spirit:name>
@@ -941,7 +957,7 @@
     <spirit:parameter>
       <spirit:name>BUFFER_SIZE</spirit:name>
       <spirit:displayName>Buffer Size</spirit:displayName>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.BUFFER_SIZE" spirit:minimum="1" spirit:maximum="65536" spirit:rangeType="long">16</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.BUFFER_SIZE" spirit:choiceRef="choice_pairs_43a8a040">8</spirit:value>
     </spirit:parameter>
     <spirit:parameter>
       <spirit:name>AXI_CLOCK_PERIOD</spirit:name>
@@ -1057,9 +1073,9 @@
         <xilinx:taxonomy>/AXI_Peripheral</xilinx:taxonomy>
         <xilinx:taxonomy>/Communication/UART</xilinx:taxonomy>
       </xilinx:taxonomies>
-      <xilinx:displayName>UART Transmitter</xilinx:displayName>
-      <xilinx:coreRevision>13</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2021-10-18T00:20:52Z</xilinx:coreCreationDateTime>
+      <xilinx:displayName>AXI Lite UART Transmitter</xilinx:displayName>
+      <xilinx:coreRevision>21</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2021-10-24T18:36:04Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="ui.data.coregen.df@2899783c_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="ui.data.coregen.df@7f15c245_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
@@ -1391,16 +1407,141 @@
         <xilinx:tag xilinx:name="ui.data.coregen.df@45a5e3a8_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="ui.data.coregen.df@421b6b9_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="ui.data.coregen.df@6b5e2b85_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@862c181_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@61849b0e_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6e9446ba_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@751cecf4_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@371d6b48_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1cd90d03_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@31b6de92_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@210b8f6b_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@26a7a73e_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3015c562_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@36adf6a0_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4393857f_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@132a2f97_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@479a267e_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@200a9cb8_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6fc6d1b4_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@e99a1a_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@8f0c125_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5a3de175_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7799ce1e_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@317659bf_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2a197a57_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1fc8e57f_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@13fa00f7_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4e12a053_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@144285c1_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@30069f70_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@38fbfc0a_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2ded7dcb_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@276d140a_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5282e079_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7fe74bf1_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@382a5fec_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@66108dfc_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1054636e_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@46d1da6b_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@32ce7a31_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3b455826_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4adef03f_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2f560829_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@788338eb_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@123ea215_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@776017e9_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@71f6c07d_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2150006f_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@27e80397_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1dc8472c_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@477af57c_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7f45da1_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@56d70692_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4dc3a379_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@70422e48_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2baf0b2c_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4ac1c36b_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4352409_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6bfedf48_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@39d1ecbc_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3e5700de_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3bf4bac1_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@be716f0_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@38b488a_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@19d7def7_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@403d4835_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@53f047cd_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@21284242_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5db7c6f7_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@65b91ff6_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4cebe2c3_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@53f6b46e_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4f935fd_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4d631c6a_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@50f9cf1e_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@9292f42_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5bda3fb7_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@36de93b7_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6e037c50_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7c7e9168_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4265336_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5df2af1c_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@27f3401b_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7cdfc84e_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@dc3e8f_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@19d4d0fd_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4221da7b_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7cd73d37_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@67412ddb_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@66f38652_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7896141b_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2c74a4d6_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@220e651d_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1d7beb7f_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@494df61f_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@331bb033_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2e27d503_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@532e59f8_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1f21ea37_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2d6be9fd_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@26536af3_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@63a3852b_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@63752815_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@694a9c8a_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@57c090a4_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4d0b67b1_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6151f534_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@28d1c917_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4000d928_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@43f710d0_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@f6ea803_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3679f505_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4c59f7a4_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@46a7a2c6_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4ac53313_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5a442d2d_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6718bb36_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@18837eb7_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@521522d9_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@4401c121_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@15a3d355_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2e804dd6_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7bd4a551_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@794a36be_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3de88ec0_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@6299b903_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1699335b_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@5d515672_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2021.1.1</xilinx:xilinxVersion>
       <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="03696ea0"/>
       <xilinx:checksum xilinx:scope="memoryMaps" xilinx:value="e6b45b7c"/>
-      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="c3ca5490"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="80574799"/>
       <xilinx:checksum xilinx:scope="ports" xilinx:value="6dbf2fef"/>
-      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="47718058"/>
-      <xilinx:checksum xilinx:scope="parameters" xilinx:value="2cbe8602"/>
+      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="3a28f2c3"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="86848652"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>

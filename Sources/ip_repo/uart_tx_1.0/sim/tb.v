@@ -164,16 +164,16 @@ module tb(
     state = "Fill buffer";
     s_axi_wvalid = 1;
     s_axi_awvalid = 1;
-    for (i = 0; i < 68; i=i+1) begin
+    for (i = 0; i < 20; i=i+1) begin
       s_axi_wdata = i;
       @(posedge s_axi_aclk); #1;
     end
     s_axi_wvalid = 0;
     s_axi_awvalid = 0;
-    repeat(20) @(negedge new_data); #1;
+    repeat(10) @(negedge new_data); #1;
     s_axi_wvalid = 1;
     s_axi_awvalid = 1;
-    s_axi_wdata = 69;
+    s_axi_wdata = 32'h45;
     @(posedge s_axi_aclk); #1;
     s_axi_wvalid = 0;
     s_axi_awvalid = 0;
@@ -190,7 +190,7 @@ module tb(
     s_axi_awvalid = 1;
     @(posedge s_axi_aclk); #1;
     s_axi_awaddr = OFFSET_TX_BUFF;
-    for (i = 0; i < 68; i=i+1) begin
+    for (i = 0; i < 20; i=i+1) begin
       s_axi_wdata = i + 32'b1000_0000;
       @(posedge s_axi_aclk); #1;
       while(s_axi_wready == 0) begin
@@ -214,10 +214,10 @@ module tb(
     @(posedge s_axi_aclk); #1;
     s_axi_wvalid = 0;
     s_axi_awvalid = 0;
-    repeat(10) @(posedge s_axi_aclk); #1
-    ;s_axi_wvalid = 1;
+    repeat(10) @(posedge s_axi_aclk); #1;
+    s_axi_wvalid = 1;
     s_axi_awvalid = 1;
-    s_axi_wdata = 32'h3;
+    s_axi_wdata = 32'h5;
     s_axi_awaddr = OFFSET_CONFIG;
     @(posedge s_axi_aclk); #1;
     fork

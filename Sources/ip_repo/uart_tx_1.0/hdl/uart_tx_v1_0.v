@@ -5,7 +5,7 @@
  * ------------------------------------------------ *
  * File        : uart_tx_v1_0.v                     *
  * Author      : Yigit Suoglu                       *
- * Last Edit   : 21/10/2021                         *
+ * Last Edit   : 24/10/2021                         *
  * ------------------------------------------------ *
  * Description : UART Transmitter IP with AXI-lite  *
  *               interface                          *
@@ -16,7 +16,7 @@
   module uart_tx_v1_0 #
   ( 
     //Customization Parameters
-    parameter BUFFER_SIZE = 16,
+    parameter BUFFER_SIZE = 8,
     parameter AXI_CLOCK_PERIOD = 10,
 
     //Default UART Configurations
@@ -68,8 +68,8 @@
     localparam RES_OKAY = 2'b00,
                RES_ERR  = 2'b10; //Slave error
     wire clk_uart, uart_enable, ready; //Module connections
-    localparam FIFO_COUNTER_SIZE = $clog2(BUFFER_SIZE+1);
-    wire [FIFO_COUNTER_SIZE-1:0] Tx_awaiting;
+    localparam FIFO_COUNTER_SIZE = BUFFER_SIZE;
+    wire [FIFO_COUNTER_SIZE:0] Tx_awaiting;
     reg ready_d;
     always@(posedge s_axi_aclk) begin
       ready_d <= ready;
@@ -107,8 +107,8 @@
      *     _Bits_       _Reg_
      *      [11]       Blocking Tx
      *      [10]       clear_fifo (self clearing)
-     *     [9:7]       divRatio
-     *      [6]       baseClock_freq
+     *      [9]       baseClock_freq
+     *     [8:6]       divRatio
      *     [5:4]      parity_mode
      *      [3]       parity_en
      *      [2]       data_size
@@ -118,8 +118,8 @@
     wire [C_S_AXI_DATA_WIDTH-1:0] config_reg = {
                                                 blockingTx, //11
                                                 clear_fifo, //10
-                                                divRatio, //9-7
-                                                baseClock_freq, //6
+                                                baseClock_freq, //9
+                                                divRatio, //8-6
                                                 parity_mode, //5-4
                                                 parity_en, //3
                                                 data_size, //2
@@ -138,8 +138,8 @@
         stop_bit_size <= DEFAULT_STOP_BIT;
         interrupt_en <= 0;
       end else begin
-        {blockingTx, clear_fifo,divRatio,baseClock_freq,parity_mode,parity_en,
-        data_size,stop_bit_size,interrupt_en} <= (update_config) ? data_to_write : {blockingTx, 1'b0,divRatio,baseClock_freq,parity_mode,parity_en,
+        {blockingTx, clear_fifo,baseClock_freq,divRatio,parity_mode,parity_en,
+        data_size,stop_bit_size,interrupt_en} <= (update_config) ? data_to_write : {blockingTx, 1'b0,baseClock_freq,divRatio,parity_mode,parity_en,
         data_size,stop_bit_size,interrupt_en};
       end
     end
@@ -149,7 +149,7 @@
     wire [7:0] data;
     wire buffer_addressed = (write_address == OFFSET_TX_BUFF);
     wire write_buffer = buffer_addressed & write;
-    fifo_level #(.DATA_WIDTH(8), .FIFO_LENGTH(BUFFER_SIZE)) 
+    fifo #(.DATA_WIDTH(8), .FIFO_LENGTH_SIZE(BUFFER_SIZE)) 
         tx_buffer(.clk(s_axi_aclk), 
                   .rst(~s_axi_aresetn|clear_fifo),
                   .fifo_empty(tx_buffer_empty),
@@ -219,14 +219,14 @@
     end
 
     //Write Channel handshake (Data & Addr)
-    assign s_axi_awready = write;
-    assign s_axi_wready  = write;
+    wire  write_ch_ready = config_free & buffer_free & ~(s_axi_awvalid ^ s_axi_wvalid) & ~s_axi_bvalid_hold;
+    assign s_axi_awready = write_ch_ready;
+    assign s_axi_wready  = write_ch_ready;
 
     //Read Channel handshake (Addr & data)
-    assign s_axi_arready = ~s_axi_rvalid | s_axi_rready;
+    reg s_axi_rvalid_hold; //This will hold read data channel stable until master accepts tx
     assign s_axi_rvalid = s_axi_arvalid | s_axi_rvalid_hold;
-    //This will hold read data channel stable until master accepts tx
-    reg s_axi_rvalid_hold;
+    assign s_axi_arready = ~s_axi_rvalid | s_axi_rready;
     always@(posedge s_axi_aclk) begin
       if(~s_axi_aresetn) begin
         s_axi_rvalid_hold <= 0;

@@ -11,13 +11,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="7,266.809333 us"></ZoomStartTime>
-      <ZoomEndTime time="7,415.809334 us"></ZoomEndTime>
-      <Cursor1Time time="7,364.925000 us"></Cursor1Time>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="73.901 ns"></ZoomEndTime>
+      <Cursor1Time time="0.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="160"></NameColumnWidth>
-      <ValueColumnWidth column_width="77"></ValueColumnWidth>
+      <NameColumnWidth column_width="155"></NameColumnWidth>
+      <ValueColumnWidth column_width="88"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="20" />
    <wvobject type="array" fp_name="/tb/state">
@@ -60,7 +60,6 @@
    <wvobject type="group" fp_name="group30">
       <obj_property name="label">AXI WRITE Addrs</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="logic" fp_name="/tb/s_axi_awvalid">
          <obj_property name="ElementShortName">s_axi_awvalid</obj_property>
          <obj_property name="ObjectShortName">s_axi_awvalid</obj_property>
@@ -89,7 +88,6 @@
    <wvobject type="group" fp_name="group31">
       <obj_property name="label">AXI Write Data</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="logic" fp_name="/tb/s_axi_wvalid">
          <obj_property name="ElementShortName">s_axi_wvalid</obj_property>
          <obj_property name="ObjectShortName">s_axi_wvalid</obj_property>
@@ -118,7 +116,6 @@
    <wvobject type="group" fp_name="group32">
       <obj_property name="label">AXI Write Response</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="logic" fp_name="/tb/s_axi_bvalid">
          <obj_property name="ElementShortName">s_axi_bvalid</obj_property>
          <obj_property name="ObjectShortName">s_axi_bvalid</obj_property>
@@ -141,7 +138,6 @@
    <wvobject type="group" fp_name="group33">
       <obj_property name="label">AXI Read Addrs</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="logic" fp_name="/tb/s_axi_arvalid">
          <obj_property name="ElementShortName">s_axi_arvalid</obj_property>
          <obj_property name="ObjectShortName">s_axi_arvalid</obj_property>
@@ -170,7 +166,6 @@
    <wvobject type="group" fp_name="group34">
       <obj_property name="label">AXI Read Data</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject type="logic" fp_name="/tb/s_axi_rvalid">
          <obj_property name="ElementShortName">s_axi_rvalid</obj_property>
          <obj_property name="ObjectShortName">s_axi_rvalid</obj_property>
@@ -258,8 +253,8 @@
       <obj_property name="ObjectShortName">tx_buffer_full</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/tb/uut/tx_buffer/awaiting_count">
-      <obj_property name="ElementShortName">awaiting_count[6:0]</obj_property>
-      <obj_property name="ObjectShortName">awaiting_count[6:0]</obj_property>
+      <obj_property name="ElementShortName">awaiting_count[4:0]</obj_property>
+      <obj_property name="ObjectShortName">awaiting_count[4:0]</obj_property>
    </wvobject>
    <wvobject type="group" fp_name="group50">
       <obj_property name="label">uart tx module</obj_property>
@@ -269,9 +264,9 @@
          <obj_property name="ElementShortName">state[2:0]</obj_property>
          <obj_property name="ObjectShortName">state[2:0]</obj_property>
       </wvobject>
-      <wvobject type="array" fp_name="/tb/uut/transmitter/data_buff">
-         <obj_property name="ElementShortName">data_buff[7:0]</obj_property>
-         <obj_property name="ObjectShortName">data_buff[7:0]</obj_property>
+      <wvobject type="array" fp_name="/tb/uut/tx_buffer/buffer">
+         <obj_property name="ElementShortName">buffer[15:0][7:0]</obj_property>
+         <obj_property name="ObjectShortName">buffer[15:0][7:0]</obj_property>
       </wvobject>
       <wvobject type="array" fp_name="/tb/uut/transmitter/counter">
          <obj_property name="ElementShortName">counter[2:0]</obj_property>
@@ -292,6 +287,30 @@
       <wvobject type="logic" fp_name="/tb/uut/transmitter/countDONE">
          <obj_property name="ElementShortName">countDONE</obj_property>
          <obj_property name="ObjectShortName">countDONE</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/tb/uut/write_ch_ready">
+         <obj_property name="ElementShortName">write_ch_ready</obj_property>
+         <obj_property name="ObjectShortName">write_ch_ready</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/tb/uut/config_free">
+         <obj_property name="ElementShortName">config_free</obj_property>
+         <obj_property name="ObjectShortName">config_free</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/tb/uut/buffer_free">
+         <obj_property name="ElementShortName">buffer_free</obj_property>
+         <obj_property name="ObjectShortName">buffer_free</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/tb/uut/s_axi_bvalid_hold">
+         <obj_property name="ElementShortName">s_axi_bvalid_hold</obj_property>
+         <obj_property name="ObjectShortName">s_axi_bvalid_hold</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/tb/uut/tx_buffer/push">
+         <obj_property name="ElementShortName">push</obj_property>
+         <obj_property name="ObjectShortName">push</obj_property>
+      </wvobject>
+      <wvobject type="logic" fp_name="/tb/uut/tx_buffer/drop">
+         <obj_property name="ElementShortName">drop</obj_property>
+         <obj_property name="ObjectShortName">drop</obj_property>
       </wvobject>
    </wvobject>
    <wvobject type="group" fp_name="group105">
@@ -347,6 +366,27 @@
       <wvobject type="array" fp_name="/tb/helper/data_buff">
          <obj_property name="ElementShortName">data_buff[7:0]</obj_property>
          <obj_property name="ObjectShortName">data_buff[7:0]</obj_property>
+      </wvobject>
+      <wvobject type="group" fp_name="group79">
+         <obj_property name="label">Config</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject type="logic" fp_name="/tb/helper/data_size">
+            <obj_property name="ElementShortName">data_size</obj_property>
+            <obj_property name="ObjectShortName">data_size</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/tb/helper/parity_en">
+            <obj_property name="ElementShortName">parity_en</obj_property>
+            <obj_property name="ObjectShortName">parity_en</obj_property>
+         </wvobject>
+         <wvobject type="array" fp_name="/tb/helper/parity_mode">
+            <obj_property name="ElementShortName">parity_mode[1:0]</obj_property>
+            <obj_property name="ObjectShortName">parity_mode[1:0]</obj_property>
+         </wvobject>
+         <wvobject type="logic" fp_name="/tb/helper/stop_bit_size">
+            <obj_property name="ElementShortName">stop_bit_size</obj_property>
+            <obj_property name="ObjectShortName">stop_bit_size</obj_property>
+         </wvobject>
       </wvobject>
    </wvobject>
 </wave_config>

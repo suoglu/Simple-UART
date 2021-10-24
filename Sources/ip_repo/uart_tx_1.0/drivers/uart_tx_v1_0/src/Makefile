@@ -1,3 +1,4 @@
+DRIVER_LIB_VERSION = 1.0
 COMPILER=
 ARCHIVER=
 CP=cp
@@ -10,7 +11,7 @@ INCLUDEDIR=../../../include
 INCLUDES=-I./. -I${INCLUDEDIR}
 
 INCLUDEFILES=*.h
-LIBSOURCES=*.c
+LIBSOURCES=*.cpp
 OUTS = *.o
 
 libs:

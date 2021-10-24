@@ -11,7 +11,11 @@
    4. Utilization
    5. Simulation
    6. Test
-4. Status Information
+4. Transmitter IP
+   1. About
+   2. Register Map
+   3. Utilization
+5. Status Information
 
 [![Repo on GitLab](https://img.shields.io/badge/repo-GitLab-6C488A.svg)](https://gitlab.com/suoglu/uart)
 [![Repo on GitHub](https://img.shields.io/badge/repo-GitHub-3D76C2.svg)](https://github.com/suoglu/Simple-UART)
@@ -264,6 +268,94 @@ Transmitter ([sim_tx.v](Simulation/sim_tx.v)) and receiver ([sim_rx.v](Simulatio
 
 UART modules are tested on [Digilent Basys 3](https://reference.digilentinc.com/reference/programmable-logic/basys-3/reference-manual) with [test.v](Test/standalone/test.v). [design_uart_bd.tcl](Test/design_uart_bd.tcl) can be use to generate test block design automatically. `Rx` and `Tx` signals connected to [Digilent Digital Discovery](https://reference.digilentinc.com/reference/instrumentation/digital-discovery/start) via JB pins. Received and send data connected to seven segment displays. For testing, UART Send & Receive mode of protocol analyzer is used. Modules only tested in 115200 bit rates. Both 7 bit and 8 bit data sizes with all possible parity configurations tested. Additionally, System ILAs are used to monitor control signals as well as `Rx` and `Tx` signals.
 
+## Transmitter IP About
+
+Transmitter IP contains a UART transmitter with an AXI-Lite interface, without an receiver. UART configurations can be dynamically reconfigured via configuration register. A simple sw driver can be found at [uart_tx.h](Sources/ip_repo/uart_tx_1.0/drivers/uart_tx_v1_0/src/uart_tx.h). Interrupt pin is set when interrupt is enabled and Tx buffer is empty.
+
+## Transmitter IP Register Map
+
+### 0x0: Tx Buffer
+
+Write only register to add a new data to transmit buffer.
+
+### 0x4: Configuration Register
+
+Allows dynamic reconfiguration of the IP core.
+
+|31:12|11|10|9|8:6|5:4|3|2|1|0|
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+|Reserved|Blocking Transmission|Clear Tx Buffer|Base Clk|Div Ratio|Parity Mode|Parity En|Data Size|Stop Bit Size|Interrupt En|
+
+**Blocking Transmission:**
+
+When set, core clears write channel ready signals if the Tx Buffer full.
+
+**Clear Tx Buffer:**
+
+Clears Tx buffer, self clearing.
+
+**Base Clock:**
+
+Corresponds to `baseClock_freq`.
+
+**Division Ratio:**
+
+Corresponds to `divRatio`.
+
+**Parity Mode:**
+
+Corresponds to `parity_mode`.
+
+|Space|Mark|Even|Odd|
+|:---:|:---:|:---:|:---:|
+|*0b00*|*0b01*|*0b10*|*0b11*|
+
+**Parity Enable:**
+
+Enables parity calculation.
+
+**Data Size:**
+
+Corresponds to `data_size`.
+
+Cleared for 7 bits, set for 8 bits.
+
+**Stop Bit Size:**
+
+Corresponds to `stop_bit_size`.
+
+Cleared for 1 bits, set for 2 bits.
+
+**Interrupt Enable:**
+
+Enables interrupt pin.
+
+### 0x8: Status Register
+
+Read only register that contains the IP status.
+
+|31:2|1|0|
+|:---:|:---:|:---:|
+|Reserved|Tx Buffer Full|Tx Buffer Empty|
+
+### 0xC: Tx Buffer Counter
+
+Read only register that contains the number of remaining entries in the Tx buffer.
+
+## Transmitter IP Utilization
+
+**(Synthesized) Utilization with 16 byte buffer on Artix-7:**
+
+* Slice LUTs as Logic: 89
+* Slice LUTs as Distributed RAM: 8
+* Slice Registers as Flip Flop: 76
+
+**(Synthesized) Utilization with 256 byte buffer on Artix-7:**
+
+* Slice LUTs as Logic: 118
+* Slice LUTs as Distributed RAM: 48
+* Slice Registers as Flip Flop: 84
+
 ## Status Information
 
 ### Standalone
@@ -271,3 +363,9 @@ UART modules are tested on [Digilent Basys 3](https://reference.digilentinc.com/
 **Last simulation:** 10 October 2021, with [Vivado Simulator](https://www.xilinx.com/products/design-tools/vivado/simulator.html).
 
 **Last test:** 21 October 2021, on [Digilent Basys 3](https://reference.digilentinc.com/reference/programmable-logic/basys-3/reference-manual).
+
+### AXI Transmitter IP
+
+**Last simulation:** 24 October 2021, with [Vivado Simulator](https://www.xilinx.com/products/design-tools/vivado/simulator.html).
+
+**Last test:** 24 October 2021, on [Digilent Basys 3](https://reference.digilentinc.com/reference/programmable-logic/basys-3/reference-manual).

@@ -10,7 +10,7 @@ proc init_gui { IPINST } {
   set Basic_Configurations [ipgui::add_group $IPINST -name "Basic Configurations" -parent ${Page_0}]
   set AXI_CLOCK_PERIOD [ipgui::add_param $IPINST -name "AXI_CLOCK_PERIOD" -parent ${Basic_Configurations}]
   set_property tooltip {This is important to have correct baud rate} ${AXI_CLOCK_PERIOD}
-  set BUFFER_SIZE [ipgui::add_param $IPINST -name "BUFFER_SIZE" -parent ${Basic_Configurations}]
+  set BUFFER_SIZE [ipgui::add_param $IPINST -name "BUFFER_SIZE" -parent ${Basic_Configurations} -widget comboBox]
   set_property tooltip {Number of maximum elements in the buffer} ${BUFFER_SIZE}
 
   #Adding Group
@@ -44,8 +44,8 @@ via configuration register,}
   ipgui::add_static_text $IPINST -name "Configuration Bits" -parent ${Configuration_Register} -text {bit[11]  : Blocking Transmission
 ~When Tx Buffer is full, core waits to respond for a write to Tx Buffer
 bit[10]  : Clear Tx FIFO, self clearing
-bit[9:7] : Divison ratio, see next page
-bit[6]    : Base clock, see next page
+bit[9]    : Base clock, see next page
+bit[8:6] : Divison ratio, see next page
 bit[5:4] : Parity mode (00 space, 01 mark, 10 even, 11 odd)
 bit[3]    : Parity enable
 bit[2]    : Data Size (0 7 bits, 1 8 bits)

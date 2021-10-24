@@ -5,7 +5,7 @@
  *  File        : uart_tx.h                      *
  *  Author      : Yigit Suoglu                   *
  *  License     : EUPL-1.2                       *
- *  Last Edit   : 21/10/2021                     *
+ *  Last Edit   : 24/10/2021                     *
  *-----------------------------------------------*
  *  Description : SW driver for UART transmitter *
  *-----------------------------------------------*/
@@ -24,7 +24,7 @@ enum baud_rate : unsigned short {
   com1k2, //6
   com600, //7
   com460k8, //8
-  com230k4, //9,
+  com230k4, //9
   com115k2, //10
   com57k6, //11
   com28k8, //12
@@ -53,9 +53,9 @@ enum stopbits : unsigned char {
 class uart_tx{
 private:
   unsigned long* tx;
-  unsigned long* config;
-  unsigned long* status;
-  unsigned long* tx_waiting;
+  volatile unsigned long* config;
+  volatile unsigned long* status;
+  volatile unsigned long* tx_waiting;
 public:
   uart_tx();
   uart_tx(unsigned long base_address);
@@ -75,6 +75,10 @@ public:
   void dataBitChange(databits bit_size);
   void stopBitChange(stopbits bit_size);
   void bitsChange(databits dbit_size, stopbits sbit_size);
+  void setBaudRate(unsigned char bRate);
+  void setBaudRate(bool fastMainClk, unsigned char divRatio);
+  void setBaudRate(baud_rate bRate);
+  baud_rate getBaudRate();
 };
 
 #endif // UART_TX_H
