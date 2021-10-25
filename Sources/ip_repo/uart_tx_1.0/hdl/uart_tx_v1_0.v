@@ -77,10 +77,10 @@
     wire done_tx = ~ready_d & ready;
 
     reg blockingTx; //Config to block axi when buffer full
-    wire tx_buffer_empty, tx_buffer_full; //Buffer stastus
+    wire tx_buffer_empty, tx_buffer_full;
 
     //Addresses
-    localparam ADDRS_MASK = 5'h1F;
+    localparam ADDRS_MASK = {C_S_AXI_ADDR_WIDTH{1'b1}};
     wire [C_S_AXI_ADDR_WIDTH-1:0] write_address = s_axi_awaddr & ADDRS_MASK;
     wire [C_S_AXI_ADDR_WIDTH-1:0]  read_address = s_axi_araddr & ADDRS_MASK;
 
