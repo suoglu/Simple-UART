@@ -1,6 +1,6 @@
 `timescale 1 ns / 1 ps
 /* ------------------------------------------------ *
- * Title       : UART interface  v1.4               *
+ * Title       : UART interface  v1.5               *
  * Project     : Simple UART                        *
  * ------------------------------------------------ *
  * File        : uart.v                             *

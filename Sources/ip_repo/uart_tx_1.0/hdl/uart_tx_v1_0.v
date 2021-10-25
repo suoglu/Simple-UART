@@ -11,7 +11,7 @@
  *               interface                          *
  * ------------------------------------------------ *
  * Revisions                                        *
- *     v1      : Inital version (uart module: v1.6) *
+ *     v1      : Inital version                     *
  * ------------------------------------------------ */
   module uart_tx_v1_0 #
   ( 
