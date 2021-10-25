@@ -850,19 +850,23 @@
       <spirit:file>
         <spirit:name>src/fifo.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
+        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
       <spirit:file>
         <spirit:name>src/uart.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
+        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
       <spirit:file>
         <spirit:name>src/uart_clock.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
+        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
       <spirit:file>
         <spirit:name>hdl/uart_tx_v1_0.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
         <spirit:userFileType>CHECKSUM_e0db4f9a</spirit:userFileType>
+        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -870,18 +874,22 @@
       <spirit:file>
         <spirit:name>src/fifo.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
+        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
       <spirit:file>
         <spirit:name>src/uart.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
+        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
       <spirit:file>
         <spirit:name>src/uart_clock.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
+        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
       <spirit:file>
         <spirit:name>hdl/uart_tx_v1_0.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
+        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -908,6 +916,7 @@
       <spirit:file>
         <spirit:name>drivers/uart_tx_v1_0/src/uart_tx.cpp</spirit:name>
         <spirit:fileType>cppSource</spirit:fileType>
+        <spirit:userFileType>driver_src</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -933,12 +942,14 @@
         <spirit:fileType>verilogSource</spirit:fileType>
         <spirit:userFileType>USED_IN_simulation</spirit:userFileType>
         <spirit:userFileType>USED_IN_testbench</spirit:userFileType>
+        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
       <spirit:file>
         <spirit:name>sim/tb.v</spirit:name>
         <spirit:fileType>verilogSource</spirit:fileType>
         <spirit:userFileType>USED_IN_simulation</spirit:userFileType>
         <spirit:userFileType>USED_IN_testbench</spirit:userFileType>
+        <spirit:logicalName>xil_defaultlib</spirit:logicalName>
       </spirit:file>
       <spirit:file>
         <spirit:name>sim/tb_behav.wcfg</spirit:name>
@@ -1074,8 +1085,8 @@
         <xilinx:taxonomy>/Communication/UART</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>AXI Lite UART Transmitter</xilinx:displayName>
-      <xilinx:coreRevision>22</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2021-10-25T19:05:43Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>23</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2021-10-25T19:48:21Z</xilinx:coreCreationDateTime>
       <xilinx:tags>
         <xilinx:tag xilinx:name="ui.data.coregen.df@2899783c_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="ui.data.coregen.df@7f15c245_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
@@ -1542,6 +1553,16 @@
         <xilinx:tag xilinx:name="ui.data.coregen.df@2d0d0be9_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="ui.data.coregen.df@102e5a22_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
         <xilinx:tag xilinx:name="ui.data.coregen.df@661d75ef_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@7c0402ba_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@2784fd7f_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@457bad82_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@766254ab_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@39ea645d_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@3e312711_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@1d00abb9_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@33ed969_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@534860a_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
+        <xilinx:tag xilinx:name="ui.data.coregen.df@e41bccd_ARCHIVE_LOCATION">/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_tx_1.0</xilinx:tag>
       </xilinx:tags>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
