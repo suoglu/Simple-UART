@@ -12,6 +12,7 @@
  * ------------------------------------------------ *
  * Revisions                                        *
  *     v1      : Inital version                     *
+ *     v1.1    : OxDEC0DEE3 for nonexisting addrs   *
  * ------------------------------------------------ */
   module uart_tx_v1_0 #
   ( 
@@ -65,6 +66,7 @@
     input wire  s_axi_rready
   );
     integer i;
+    localparam OxDEC0DEE3 = 3737181923; // this is also used by interconnect when the address doesn't exist
     localparam RES_OKAY = 2'b00,
                RES_ERR  = 2'b10; //Slave error
     wire clk_uart, uart_enable, ready; //Module connections
@@ -260,7 +262,7 @@
         OFFSET_STATUS:   readReg = status_reg;
         OFFSET_CONFIG:   readReg = config_reg;
         OFFSET_TX_COUNT: readReg = Tx_awaiting;
-        default: readReg = 0;
+        default: readReg = OxDEC0DEE3;
       endcase
     end
   endmodule

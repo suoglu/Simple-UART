@@ -271,6 +271,15 @@ module tb(
     join
     @(posedge interrupt);
     //@(posedge new_data);
+    repeat(2) @(posedge s_axi_aclk); #1;
+    state = "Read from wrong addrs";
+    s_axi_arvalid = 1;
+    s_axi_araddr = 1;
+    while(s_axi_arready == 0) begin
+      @(posedge s_axi_aclk); #1;
+    end
+    @(posedge s_axi_aclk); #1;
+      s_axi_arvalid = 0;
     repeat(4) @(posedge s_axi_aclk); #1;
     $finish;
   end
