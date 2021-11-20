@@ -5,18 +5,27 @@
  *  File        : uart_tx.cpp                    *
  *  Author      : Yigit Suoglu                   *
  *  License     : EUPL-1.2                       *
- *  Last Edit   : 24/10/2021                     *
+ *  Last Edit   : 20/11/2021                     *
  *-----------------------------------------------*
  *  Description : SW driver for UART transmitter *
  *-----------------------------------------------*/
 #include "uart_tx.h"
 
-uart_tx::uart_tx():
-  tx(reinterpret_cast<unsigned long*>(XPAR_UART_TX_0_S_AXI_BASEADDR)),
-  config(reinterpret_cast<unsigned long*>(XPAR_UART_TX_0_S_AXI_BASEADDR+4u)),
-  status(reinterpret_cast<unsigned long*>(XPAR_UART_TX_0_S_AXI_BASEADDR+8u)),
-  tx_waiting(reinterpret_cast<unsigned long*>(XPAR_UART_TX_0_S_AXI_BASEADDR+12u)){
-}
+#ifdef XPAR_UART_TX_S_AXI_BASEADDR
+  uart_tx::uart_tx():
+    tx(reinterpret_cast<unsigned long*>(XPAR_UART_TX_S_AXI_BASEADDR)),
+    config(reinterpret_cast<unsigned long*>(XPAR_UART_TX_S_AXI_BASEADDR+4u)),
+    status(reinterpret_cast<unsigned long*>(XPAR_UART_TX_S_AXI_BASEADDR+8u)),
+    tx_waiting(reinterpret_cast<unsigned long*>(XPAR_UART_TX_S_AXI_BASEADDR+12u)){
+  }
+#elif defined(XPAR_UART_TX_0_S_AXI_BASEADDR)
+  uart_tx::uart_tx():
+    tx(reinterpret_cast<unsigned long*>(XPAR_UART_TX_0_S_AXI_BASEADDR)),
+    config(reinterpret_cast<unsigned long*>(XPAR_UART_TX_0_S_AXI_BASEADDR+4u)),
+    status(reinterpret_cast<unsigned long*>(XPAR_UART_TX_0_S_AXI_BASEADDR+8u)),
+    tx_waiting(reinterpret_cast<unsigned long*>(XPAR_UART_TX_0_S_AXI_BASEADDR+12u)){
+  }
+#endif
 
 uart_tx::uart_tx(unsigned long base_address):
   tx(reinterpret_cast<unsigned long*>(base_address)),
