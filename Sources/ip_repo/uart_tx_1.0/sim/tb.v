@@ -1,28 +1,17 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 08/30/2021 11:11:12 AM
-// Design Name: 
-// Module Name: tb
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
+`timescale 1 ns / 1 ps
+/* ------------------------------------------------ *
+ * Title       : UART Transmitter IP Testbench      *
+ * Project     : Simple UART                        *
+ * ------------------------------------------------ *
+ * File        : tb.v                               *
+ * Author      : Yigit Suoglu                       *
+ * Last Edit   : 24/10/2021                         *
+ * ------------------------------------------------ *
+ * Description : UART Transmitter IP testbench      *
+ * ------------------------------------------------ */
 
 
-module tb(
-
-  );
+module tb();
   localparam C_S_AXI_ADDR_WIDTH = 32,
              C_S_AXI_DATA_WIDTH = 32,
              OFFSET_TX_BUFF = 0,
