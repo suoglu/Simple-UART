@@ -132,7 +132,7 @@ void uart_tx::setBaudRate(bool fastMainClk, unsigned char divRatio){
   setBaudRate(bRate);
 }
 
-baud_rate uart_tx::getBaudRate(){
+uart_tx::baud_rate uart_tx::getBaudRate(){
   unsigned char bRate = static_cast<unsigned char>((*config >> 6) & 0xFu);
   return static_cast<baud_rate>(bRate);
 }
