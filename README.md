@@ -15,7 +15,11 @@
    1. About
    2. Register Map
    3. Utilization
-5. Status Information
+5. Receiver IP
+   1. About
+   2. Register Map
+   3. Utilization
+6. Status Information
 
 [![Repo on GitLab](https://img.shields.io/badge/repo-GitLab-6C488A.svg)](https://gitlab.com/suoglu/uart)
 [![Repo on GitHub](https://img.shields.io/badge/repo-GitHub-3D76C2.svg)](https://github.com/suoglu/Simple-UART)
@@ -356,6 +360,104 @@ Read only register that contains the number of remaining entries in the Tx buffe
 * Slice LUTs as Distributed RAM: 48
 * Slice Registers as Flip Flop: 84
 
+## Receiver IP About
+
+Receiver IP contains a UART receiver with an AXI-Lite interface, without an receiver. UART configurations can be dynamically reconfigured via configuration register. A simple sw driver can be found at [uart_rx.h](Sources/ip_repo/uart_rx_1.0/drivers/uart_rx_v1_0/src/uart_rx.h). Interrupt pin is set when interrupt is enabled and Rx buffer has a new Data. Parity and frame errors for each transmission can be detected.
+
+## Receiver IP Register Map
+
+### 0x0: Rx Buffer (Receiver IP)
+
+Read only register to read oldest received data. If the error buffer is included in hardware, error flags can be read from second byte.
+
+|31:10|9|8|7:0|
+|:---:|:---:|:---:|:---:|
+|Reserved|Parity Error*|Frame Error*|Data|
+
+*Parity error and frame error flags valid only if it is included in the hardware and enabled in configuration register before receiving, otherwise they are zero.
+
+### 0x4: Configuration Register (Receiver IP)
+
+Allows dynamic reconfiguration of the IP core.
+
+|31:12|11|10|9|8:6|5:4|3|2|1|0|
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+|Reserved|Enable Error Buffer*|Clear Rx Buffer|Base Clk|Div Ratio|Parity Mode|Parity En|Data Size|Stop Bit Size|Interrupt En|
+
+*Only valid if included in hardware
+
+**Enable Error Buffer:**
+
+When set, core saves error flags for each transmission.
+
+**Clear Rx Buffer:**
+
+Clears Rx buffer, self clearing.
+
+**Base Clock:**
+
+Corresponds to `baseClock_freq`.
+
+**Division Ratio:**
+
+Corresponds to `divRatio`.
+
+**Parity Mode:**
+
+Corresponds to `parity_mode`.
+
+|Space|Mark|Even|Odd|
+|:---:|:---:|:---:|:---:|
+|*0b00*|*0b01*|*0b10*|*0b11*|
+
+**Parity Enable:**
+
+Enables parity calculation.
+
+**Data Size:**
+
+Corresponds to `data_size`.
+
+Cleared for 7 bits, set for 8 bits.
+
+**Stop Bit Size:**
+
+Corresponds to `stop_bit_size`.
+
+Cleared for 1 bits, set for 2 bits.
+
+**Interrupt Enable:**
+
+Enables interrupt pin.
+
+### 0x8: Status Register (Receiver IP)
+
+Read only register that contains the IP status.
+
+|31:2|5|4|3|2|1|0|
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+|Reserved|Error Buffer implemented|Overrun/Data Lost*|Parity Error*|Frame Error*|Rx Buffer Full|Rx Buffer Empty|
+
+*Cleared only after status register read
+
+### 0xC: Rx Buffer Counter (Receiver IP)
+
+Read only register that contains the number of remaining entries in the Rx buffer.
+
+## Receiver IP Utilization
+
+**(Synthesized) Utilization with 16 byte buffer on Artix-7:**
+
+* Slice LUTs as Logic: 112
+* Slice LUTs as Distributed RAM: 8
+* Slice Registers as Flip Flop: 99
+
+**(Synthesized) Utilization with 256 byte buffer on Artix-7:**
+
+* Slice LUTs as Logic: 139
+* Slice LUTs as Distributed RAM: 56
+* Slice Registers as Flip Flop: 107
+
 ## Status Information
 
 ### Standalone
@@ -369,3 +471,9 @@ Read only register that contains the number of remaining entries in the Tx buffe
 **Last simulation:** 24 October 2021, with [Vivado Simulator](https://www.xilinx.com/products/design-tools/vivado/simulator.html).
 
 **Last test:** 24 October 2021, on [Digilent Basys 3](https://reference.digilentinc.com/reference/programmable-logic/basys-3/reference-manual).
+
+### AXI Receiver IP
+
+**Last simulation:** 22 November 2021, with [Icarus Verilog](https://iverilog.icarus.com/).
+
+**Last test:** 25 November 2021, on [Digilent Arty A7](https://reference.digilentinc.com/reference/programmable-logic/arty-a7/reference-manual).
