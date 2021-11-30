@@ -5,7 +5,7 @@
  *  File        : uart_rx.h                      *
  *  Author      : Yigit Suoglu                   *
  *  License     : EUPL-1.2                       *
- *  Last Edit   : 20/11/2021                     *
+ *  Last Edit   : 30/11/2021                     *
  *-----------------------------------------------*
  *  Description : SW driver for UART Receiver    *
  *-----------------------------------------------*/
@@ -25,6 +25,7 @@ class uart_rx{
       uart_rx();
     #endif
     uart_rx(unsigned long base_address);
+    uart_rx(unsigned long base_address, unsigned long offset_status, unsigned long offset_config, unsigned long offset_rx_buff, unsigned long offset_rx_count);
 
     enum baud_rate : unsigned short {
       com76k8, //0

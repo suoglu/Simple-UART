@@ -5,7 +5,7 @@
  *  File        : uart_tx.cpp                    *
  *  Author      : Yigit Suoglu                   *
  *  License     : EUPL-1.2                       *
- *  Last Edit   : 24/11/2021                     *
+ *  Last Edit   : 30/11/2021                     *
  *-----------------------------------------------*
  *  Description : SW driver for UART transmitter *
  *-----------------------------------------------*/
@@ -32,6 +32,13 @@ uart_rx::uart_rx(unsigned long base_address):
   config(reinterpret_cast<unsigned long*>(base_address+4u)),
   status(reinterpret_cast<unsigned long*>(base_address+8u)),
   rx_waiting(reinterpret_cast<unsigned long*>(base_address+12u)){
+}
+
+uart_rx::uart_rx(unsigned long base_address, unsigned long offset_status, unsigned long offset_config, unsigned long offset_rx_buff, unsigned long offset_rx_count):
+  rx(reinterpret_cast<unsigned long*>(base_address+offset_rx_buff)),
+  config(reinterpret_cast<unsigned long*>(base_address+offset_config)),
+  status(reinterpret_cast<unsigned long*>(base_address+offset_status)),
+  rx_waiting(reinterpret_cast<unsigned long*>(base_address+offset_rx_count)){
 }
 
 unsigned char uart_rx::receive(){

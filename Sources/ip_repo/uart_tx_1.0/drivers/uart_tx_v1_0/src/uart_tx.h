@@ -5,7 +5,7 @@
  *  File        : uart_tx.h                      *
  *  Author      : Yigit Suoglu                   *
  *  License     : EUPL-1.2                       *
- *  Last Edit   : 20/11/2021                     *
+ *  Last Edit   : 30/11/2021                     *
  *-----------------------------------------------*
  *  Description : SW driver for UART transmitter *
  *-----------------------------------------------*/
@@ -25,6 +25,7 @@ class uart_tx{
       uart_tx();
     #endif
     uart_tx(unsigned long base_address);
+    uart_tx(unsigned long base_address, unsigned long offset_status, unsigned long offset_config, unsigned long offset_tx_buff, unsigned long offset_tx_count);
 
     enum baud_rate : unsigned short {
       com76k8, //0
