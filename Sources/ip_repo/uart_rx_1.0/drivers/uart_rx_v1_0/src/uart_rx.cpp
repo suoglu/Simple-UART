@@ -75,7 +75,7 @@ uart_rx::rx_error uart_rx::getErrors(){
 }
 
 bool uart_rx::hasErrorBuffer(){
-  return (((getStatus() >> 5) & 0x1ul) == 0x1ul);
+  return ((getStatus() & 0x20ul) == 0x20ul);
 }
 
 void uart_rx::setConfig(unsigned long conf){
@@ -83,7 +83,7 @@ void uart_rx::setConfig(unsigned long conf){
 }
 
 bool uart_rx::isFull(){
-  return (((getStatus() >> 1) & 0x1ul) == 0x1ul);
+  return ((getStatus() & 0x2ul) == 0x2ul);
 }
 
 bool uart_rx::isEmpty(){
