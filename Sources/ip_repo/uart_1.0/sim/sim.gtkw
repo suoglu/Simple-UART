@@ -1,0 +1,91 @@
+[*]
+[*] GTKWave Analyzer v3.3.104 (w)1999-2020 BSI
+[*] Tue Nov 30 16:02:14 2021
+[*]
+[dumpfile] "/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_1.0/sim.vcd"
+[dumpfile_mtime] "Tue Nov 30 15:51:32 2021"
+[dumpfile_size] 2506560
+[savefile] "/home/suoglu/Projects/Personal/uart/Sources/ip_repo/uart_1.0/sim/sim.gtkw"
+[timestart] 498847000
+[size] 1920 1016
+[pos] -1 -1
+*-16.045349 493453200 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb.
+[treeopen] tb.uut.
+[sst_width] 221
+[signals_width] 204
+[sst_expanded] 1
+[sst_vpaned_height] 579
+@820
+tb.state[240:0]
+@28
+tb.s_axi_aclk
+tb.s_axi_aresetn
+tb.uart_bridge
+@200
+-AXI Read Addr
+@28
+tb.s_axi_arready
+tb.s_axi_arvalid
+@200
+-AXI Read Data
+@28
+tb.s_axi_rready
+tb.s_axi_rvalid
+@22
+tb.s_axi_rdata[31:0]
+@28
+tb.s_axi_rresp[1:0]
+@200
+-AXI Write Addr
+@28
+tb.s_axi_awready
+tb.s_axi_awvalid
+@200
+-AXI Write Data
+@28
+tb.s_axi_wready
+tb.s_axi_wvalid
+@22
+tb.s_axi_wdata[31:0]
+@200
+-AXI Write Resp
+@28
+tb.s_axi_bready
+tb.s_axi_bvalid
+tb.s_axi_bresp[1:0]
+@200
+-UUT
+@28
+tb.uut.interrupt
+tb.uut.gotCRCError
+tb.uut.gotFrameError
+tb.uut.gotOverrun
+tb.uut.rx_buffer_empty
+tb.uut.rx_buffer_full
+tb.uut.tx_buffer_empty
+tb.uut.tx_buffer_full
+tb.uut.interruptRx_en
+tb.uut.interruptTx_en
+tb.uut.interrupt_en
+@200
+-Rx Buffer
+@22
+tb.uut.rx_buffer.data_i[9:0]
+tb.uut.rx_buffer.data_o[9:0]
+tb.uut.rx_buffer.\buffer[0][9:0]
+tb.uut.rx_buffer.\buffer[1][9:0]
+tb.uut.rx_buffer.\buffer[2][9:0]
+tb.uut.rx_buffer.\buffer[3][9:0]
+@200
+-Tx Buffer
+@23
+tb.uut.tx_buffer.data_i[7:0]
+@22
+tb.uut.tx_buffer.data_o[7:0]
+tb.uut.tx_buffer.\buffer[0][7:0]
+tb.uut.tx_buffer.\buffer[1][7:0]
+tb.uut.tx_buffer.\buffer[2][7:0]
+tb.uut.tx_buffer.\buffer[3][7:0]
+[pattern_trace] 1
+[pattern_trace] 0

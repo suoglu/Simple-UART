@@ -19,7 +19,11 @@
    1. About
    2. Register Map
    3. Utilization
-6. Status Information
+6. Transceiver IP
+   1. About
+   2. Register Map
+   3. Utilization
+7. Status Information
 
 [![Repo on GitLab](https://img.shields.io/badge/repo-GitLab-6C488A.svg)](https://gitlab.com/suoglu/uart)
 [![Repo on GitHub](https://img.shields.io/badge/repo-GitHub-3D76C2.svg)](https://github.com/suoglu/Simple-UART)
@@ -458,6 +462,139 @@ Read only register that contains the number of remaining entries in the Rx buffe
 * Slice LUTs as Distributed RAM: 56
 * Slice Registers as Flip Flop: 107
 
+## Transceiver IP About
+
+Transceiver IP contains a UART receiver and a UART transmitter with an AXI-Lite interface. UART configurations can be dynamically reconfigured via configuration register. Both channels use same configuration. A simple sw driver can be found at [uart.h](Sources/ip_repo/uart_1.0/drivers/uart_v1_0/src/uart.h). Interrupt pin is set when interrupt is enabled and can be configured to be set when Rx buffer has a new Data and/or Tx buffer is empty. Parity and frame errors for each transmission can be detected.
+
+## Transceiver IP Register Map
+
+### 0x00: Rx Buffer (Transceiver IP)
+
+Read only register to read oldest received data. If the error buffer is included in hardware, error flags can be read from second byte.
+
+|31:10|9|8|7:0|
+|:---:|:---:|:---:|:---:|
+|Reserved|Parity Error*|Frame Error*|Data|
+
+*Parity error and frame error flags valid only if it is included in the hardware and enabled in configuration register before receiving, otherwise they are zero.
+
+### 0x04: Tx Buffer (Transceiver IP)
+
+Write only register to add a new data to transmit buffer.
+
+### 0x08: Configuration Register (Transceiver IP)
+
+Allows dynamic reconfiguration of the IP core.
+
+|31:16|15|14|13|12|11|
+|:---:|:---:|:---:|:---:|:---:|:---:|
+|Reserved|Transmitter Interrupts|Receiver Interrupts|Enable Error Buffer*|Blocking Transmission|Clear Rx Buffer|
+
+|10|9|8:6|5:4|3|2|1|0|
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+|Clear Tx Buffer|Base Clk|Div Ratio|Parity Mode|Parity En|Data Size|Stop Bit Size|General Interrupt En|
+
+*Only valid if included in hardware
+
+**Transmitter Interrupts:**
+
+Interrupt pin set when the transmitter buffer is empty.
+
+**Receiver Interrupts:**
+
+Interrupt pin set when the receiver has new data.
+
+**Enable Error Buffer:**
+
+When set, core saves error flags for each transmission.
+
+**Blocking Transmission:**
+
+When set, core clears write channel ready signals if the Tx Buffer full.
+
+**Clear Tx Buffer:**
+
+Clears Tx buffer, self clearing.
+
+**Clear Rx Buffer:**
+
+Clears Rx buffer, self clearing.
+
+**Base Clock:**
+
+Corresponds to `baseClock_freq`.
+
+**Division Ratio:**
+
+Corresponds to `divRatio`.
+
+**Parity Mode:**
+
+Corresponds to `parity_mode`.
+
+|Space|Mark|Even|Odd|
+|:---:|:---:|:---:|:---:|
+|*0b00*|*0b01*|*0b10*|*0b11*|
+
+**Parity Enable:**
+
+Enables parity calculation.
+
+**Data Size:**
+
+Corresponds to `data_size`.
+
+Cleared for 7 bits, set for 8 bits.
+
+**Stop Bit Size:**
+
+Corresponds to `stop_bit_size`.
+
+Cleared for 1 bits, set for 2 bits.
+
+**General Interrupt Enable:**
+
+Enables interrupt pin.
+
+### 0x0C: Status Register (Transceiver IP)
+
+Read only register that contains the IP status.
+
+|31:8|7|6|5|4|3|2|1|0|
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+|Reserved|Error Buffer implemented|Overrun / Data Lost*|Parity Error*|Frame Error*|Tx Buffer Full|Rx Buffer Full|Tx Buffer Empty|Rx Buffer Empty|
+
+*Cleared only after status register read
+
+### 0x10: Rx Buffer Counter (Transceiver IP)
+
+Read only register that contains the number of remaining entries in the Rx buffer.
+
+### 0x14: Tx Buffer Counter (Transceiver IP)
+
+Read only register that contains the number of remaining entries in the Tx buffer.
+
+## Transceiver IP Utilization
+
+**(Synthesized) Utilization with 16 byte buffer on Artix-7:**
+
+* Slice LUTs as Logic: 205
+* Slice LUTs as Distributed RAM: 16
+* Slice Registers as Flip Flop: 145
+* F7 Muxes: 1
+
+**(Synthesized) Utilization with 128 byte buffer on Artix-7:**
+
+* Slice LUTs as Logic: 222
+* Slice LUTs as Distributed RAM: 52
+* Slice Registers as Flip Flop: 157
+
+**(Synthesized) Utilization with 256 byte buffer on Artix-7:**
+
+* Slice LUTs as Logic: 243
+* Slice LUTs as Distributed RAM: 104
+* Slice Registers as Flip Flop: 161
+
 ## Status Information
 
 ### Standalone
@@ -477,3 +614,9 @@ Read only register that contains the number of remaining entries in the Rx buffe
 **Last simulation:** 22 November 2021, with [Icarus Verilog](https://iverilog.icarus.com/).
 
 **Last test:** 25 November 2021, on [Digilent Arty A7](https://reference.digilentinc.com/reference/programmable-logic/arty-a7/reference-manual).
+
+### AXI Transceiver IP
+
+**Last simulation:** 30 November 2021, with [Icarus Verilog](https://iverilog.icarus.com/).
+
+**Last test:** 30 November 2021, on [Digilent Arty A7](https://reference.digilentinc.com/reference/programmable-logic/arty-a7/reference-manual).

@@ -1,0 +1,5 @@
+# List of sources for iverilog
+hdl/uart_v1_0.v
+src/fifo.v
+src/uart.v
+src/uart_clock.v
