@@ -6,6 +6,7 @@
  * File        : uart_v1_0.v                        *
  * Author      : Yigit Suoglu                       *
  * Last Edit   : 30/11/2021                         *
+ * Licence     : CERN-OHL-W                         *
  * ------------------------------------------------ *
  * Description : UART Transreceiver IP with         *
  *               AXI-lite interface                 *

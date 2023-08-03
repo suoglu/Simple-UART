@@ -6,6 +6,7 @@
  * File        : uart_rx_v1_0.v                     *
  * Author      : Yigit Suoglu                       *
  * Last Edit   : 20/11/2021                         *
+ * Licence     : CERN-OHL-W                         *
  * ------------------------------------------------ *
  * Description : UART Receiver IP with AXI-lite     *
  *               interface                          *

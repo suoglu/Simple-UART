@@ -6,6 +6,7 @@
  * File        : uart.v                             *
  * Author      : Yigit Suoglu                       *
  * Last Edit   : 21/10/2021                         *
+ * Licence     : CERN-OHL-W                         *
  * ------------------------------------------------ *
  * Description : UART communication modules         *
  * ------------------------------------------------ *

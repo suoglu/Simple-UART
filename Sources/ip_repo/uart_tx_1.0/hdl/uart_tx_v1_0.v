@@ -6,6 +6,7 @@
  * File        : uart_tx_v1_0.v                     *
  * Author      : Yigit Suoglu                       *
  * Last Edit   : 24/10/2021                         *
+ * Licence     : CERN-OHL-W                         *
  * ------------------------------------------------ *
  * Description : UART Transmitter IP with AXI-lite  *
  *               interface                          *

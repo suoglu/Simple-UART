@@ -24,6 +24,7 @@
    2. Register Map
    3. Utilization
 7. Status Information
+8. License
 
 [![Repo on GitLab](https://img.shields.io/badge/repo-GitLab-6C488A.svg)](https://gitlab.com/suoglu/uart)
 [![Repo on GitHub](https://img.shields.io/badge/repo-GitHub-3D76C2.svg)](https://github.com/suoglu/Simple-UART)
@@ -620,3 +621,7 @@ Read only register that contains the number of remaining entries in the Tx buffe
 **Last simulation:** 30 November 2021, with [Icarus Verilog](https://iverilog.icarus.com/).
 
 **Last test:** 30 November 2021, on [Digilent Arty A7](https://reference.digilentinc.com/reference/programmable-logic/arty-a7/reference-manual).
+
+## License
+
+CERN Open Hardware Licence Version 2 - Weakly Reciprocal

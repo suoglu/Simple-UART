@@ -6,6 +6,7 @@
  * File        : uart_clock.v                       *
  * Author      : Yigit Suoglu                       *
  * Last Edit   : 12/10/2021                         *
+ * Licence     : CERN-OHL-W                         *
  * ------------------------------------------------ *
  * Description : Clock generation for UART modules  *
  * ------------------------------------------------ */
